@@ -132,15 +132,15 @@ public class AuthController {
         }
         
         if (userId == null) {
-            throw new RuntimeException("用户ID无效");
+            throw new RuntimeException("Invalid user ID");
         }
 
         // Find user
-        User user = repo.findById(userId).orElseThrow(() -> new RuntimeException("用户不存在"));
+        User user = repo.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
         // Verify old password
         if (!encoder.matches(req.getOldPassword(), user.getPassword())) {
-            throw new RuntimeException("当前密码不正确");
+            throw new RuntimeException("Current password is incorrect");
         }
 
         // Update password
@@ -148,7 +148,7 @@ public class AuthController {
         repo.save(user);
 
         return Map.of(
-                "message", "密码修改成功",
+                "message", "Password changed successfully",
                 "success", true
         );
     }
@@ -166,20 +166,20 @@ public class AuthController {
         }
         
         if (userId == null) {
-            throw new RuntimeException("用户ID无效");
+            throw new RuntimeException("Invalid user ID");
         }
 
         // Find user
-        User user = repo.findById(userId).orElseThrow(() -> new RuntimeException("用户不存在"));
+        User user = repo.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 
         // Verify password
         if (!encoder.matches(req.getPassword(), user.getPassword())) {
-            throw new RuntimeException("密码不正确");
+            throw new RuntimeException("Password is incorrect");
         }
 
         // Check if new email already exists
         if (repo.existsByEmail(req.getNewEmail())) {
-            throw new RuntimeException("该邮箱已被使用");
+            throw new RuntimeException("Email already in use");
         }
 
         // Update email
@@ -187,7 +187,7 @@ public class AuthController {
         repo.save(user);
 
         return Map.of(
-                "message", "邮箱修改成功",
+                "message", "Email changed successfully",
                 "success", true
         );
     }
