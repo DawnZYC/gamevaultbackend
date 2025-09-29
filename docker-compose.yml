@@ -1,0 +1,64 @@
+services:
+  # === PostgreSQL ===
+  postgres:
+    image: postgres:16
+    container_name: chat-room_postgres
+    ports:
+      - "12000:5432"
+    environment:
+      - TZ=Asia/Singapore
+      - POSTGRES_DB=chat_room
+      - POSTGRES_USER=chat_room_user
+      - POSTGRES_PASSWORD=chat_room_pass
+    volumes:
+      - ./docker/postgres/data:/var/lib/postgresql/data
+      - /etc/localtime:/etc/localtime:ro
+    restart: unless-stopped
+    networks:
+      - chat-room
+
+  # === Redis ===
+  redis:
+    image: redis:alpine
+    container_name: chat-room_redis
+    ports:
+      - "12003:6379"
+    volumes:
+      - ./docker/redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./docker/redis/data/:/data
+    command: redis-server /usr/local/etc/redis/redis.conf
+    restart: always
+    networks:
+      - chat-room
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    platform: linux/amd64
+    container_name: chat-room_zookeeper
+    ports:
+      - "2182:2181"
+
+  kafka:
+    image: wurstmeister/kafka
+    container_name: chat-room_kafka
+    ports:
+      - "9092:9092"   # 内部网络
+      - "9094:9094"   # 外部调试
+    environment:
+      KAFKA_BROKER_ID: 0
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_LISTENERS: PLAINTEXT://0.0.0.0:9092,EXTERNAL://0.0.0.0:9094
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://chat-room_kafka:9092,EXTERNAL://localhost:9094
+      KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: PLAINTEXT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      KAFKA_INTER_BROKER_LISTENER_NAME: PLAINTEXT
+      KAFKA_CREATE_TOPICS: "chat-room-message:2:1"
+    depends_on:
+      - zookeeper
+    volumes:
+      - ./docker/kafka/data/:/bitnami/kafka
+    networks:
+      - chat-room
+
+networks:
+  chat-room:
+    driver: bridge
