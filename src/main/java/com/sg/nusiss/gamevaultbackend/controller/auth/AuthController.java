@@ -69,9 +69,10 @@ public class AuthController {
         String token = jwt.generateToken(u.getUserId(), u.getUsername(), u.getEmail());
         return Map.of(
                 "token", token,
-                "username", u.getUsername(),
                 "userId", u.getUserId(),
-                "email", u.getEmail()
+                "username", u.getUsername(),
+                "email", u.getEmail(),
+                "message", "Login successful"
         );
     }
 
@@ -102,10 +103,35 @@ public class AuthController {
         Object emailClaim = jwtToken.getClaims().get("email");
         if (emailClaim != null) email = emailClaim.toString();
 
+        // 如果可以从数据库获取完整用户信息，优先使用数据库数据
+        if (uid != null) {
+            try {
+                User user = repo.findById(uid).orElse(null);
+                if (user != null) {
+                    return Map.of(
+                            "userId", user.getUserId(),
+                            "username", user.getUsername(),
+                            "email", user.getEmail() != null ? user.getEmail() : "",
+                            "profile", null,  // 暂时为 null，后续可以扩展
+                            "createdAt", user.getRegisterTime() != null ? user.getRegisterTime().toString() : "2024-01-01T00:00:00.000Z",
+                            "updatedAt", user.getLastLoginTime() != null ? user.getLastLoginTime().toString() : "2024-01-01T00:00:00.000Z"
+                    );
+                }
+            } catch (Exception e) {
+                // 记录错误日志，然后回退到JWT数据
+                System.err.println("Failed to fetch user from database: " + e.getMessage());
+                e.printStackTrace();
+            }
+        }
+        
+        // 回退到JWT中的数据
         return Map.of(
+                "userId", uid != null ? uid : 0L,  // 前端期望 userId
                 "username", jwtToken.getSubject(),
-                "uid", uid,
-                "email", email
+                "email", email != null ? email : "",
+                "profile", null,  // 暂时为 null，后续可以扩展
+                "createdAt", "2024-01-01T00:00:00.000Z",  // 暂时使用默认值
+                "updatedAt", "2024-01-01T00:00:00.000Z"   // 暂时使用默认值
         );
     }
 
