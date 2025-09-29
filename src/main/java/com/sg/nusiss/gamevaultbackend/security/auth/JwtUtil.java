@@ -1,4 +1,4 @@
-package com.sg.nusiss.gamevaultbackend.security;
+package com.sg.nusiss.gamevaultbackend.security.auth;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;

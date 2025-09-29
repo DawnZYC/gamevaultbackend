@@ -1,7 +1,7 @@
 package com.sg.nusiss.gamevaultbackend.service;
 
-import com.sg.nusiss.gamevaultbackend.entity.User;
-import com.sg.nusiss.gamevaultbackend.repository.UserRepository;
+import com.sg.nusiss.gamevaultbackend.entity.auth.User;
+import com.sg.nusiss.gamevaultbackend.repository.auth.UserRepository;
 import org.springframework.security.core.userdetails.*;
 import org.springframework.stereotype.Service;
 import java.util.Collections;

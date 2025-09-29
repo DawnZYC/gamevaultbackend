@@ -1,4 +1,4 @@
-package com.sg.nusiss.gamevaultbackend.entity;
+package com.sg.nusiss.gamevaultbackend.entity.library;
 
 import jakarta.persistence.*;
 

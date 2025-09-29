@@ -1,6 +1,6 @@
-package com.sg.nusiss.gamevaultbackend.repository;
+package com.sg.nusiss.gamevaultbackend.repository.auth;
 
-import com.sg.nusiss.gamevaultbackend.entity.User;
+import com.sg.nusiss.gamevaultbackend.entity.auth.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import java.util.Optional;
 

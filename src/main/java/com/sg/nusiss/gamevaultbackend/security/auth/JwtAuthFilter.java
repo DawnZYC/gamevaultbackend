@@ -1,4 +1,4 @@
-package com.sg.nusiss.gamevaultbackend.security;
+package com.sg.nusiss.gamevaultbackend.security.auth;
 
 import com.sg.nusiss.gamevaultbackend.service.AppUserDetailsService;
 import jakarta.servlet.FilterChain;

@@ -1,4 +1,4 @@
-package com.sg.nusiss.gamevaultbackend.entity;
+package com.sg.nusiss.gamevaultbackend.entity.auth;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;

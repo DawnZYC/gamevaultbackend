@@ -1,4 +1,4 @@
-package com.sg.nusiss.gamevaultbackend.config;
+package com.sg.nusiss.gamevaultbackend.config.auth;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

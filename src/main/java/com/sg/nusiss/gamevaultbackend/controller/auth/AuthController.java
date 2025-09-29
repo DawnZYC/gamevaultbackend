@@ -1,17 +1,16 @@
-package com.sg.nusiss.gamevaultbackend.controller;
+package com.sg.nusiss.gamevaultbackend.controller.auth;
 
-import com.sg.nusiss.gamevaultbackend.dto.LoginReq;
-import com.sg.nusiss.gamevaultbackend.dto.RegisterReq;
-import com.sg.nusiss.gamevaultbackend.dto.ChangePasswordReq;
-import com.sg.nusiss.gamevaultbackend.dto.ChangeEmailReq;
-import com.sg.nusiss.gamevaultbackend.entity.User;
-import com.sg.nusiss.gamevaultbackend.repository.UserRepository;
-import com.sg.nusiss.gamevaultbackend.security.JwtUtil;
+import com.sg.nusiss.gamevaultbackend.dto.auth.LoginReq;
+import com.sg.nusiss.gamevaultbackend.dto.auth.RegisterReq;
+import com.sg.nusiss.gamevaultbackend.dto.settings.ChangePasswordReq;
+import com.sg.nusiss.gamevaultbackend.dto.settings.ChangeEmailReq;
+import com.sg.nusiss.gamevaultbackend.entity.auth.User;
+import com.sg.nusiss.gamevaultbackend.repository.auth.UserRepository;
+import com.sg.nusiss.gamevaultbackend.security.auth.JwtUtil;
 import jakarta.validation.Valid;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;

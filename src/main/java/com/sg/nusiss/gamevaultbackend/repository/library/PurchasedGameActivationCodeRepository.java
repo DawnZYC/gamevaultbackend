@@ -1,6 +1,6 @@
-package com.sg.nusiss.gamevaultbackend.repository;
+package com.sg.nusiss.gamevaultbackend.repository.library;
 
-import com.sg.nusiss.gamevaultbackend.entity.PurchasedGameActivationCode;
+import com.sg.nusiss.gamevaultbackend.entity.library.PurchasedGameActivationCode;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

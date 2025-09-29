@@ -1,4 +1,4 @@
-package com.sg.nusiss.gamevaultbackend.controller;
+package com.sg.nusiss.gamevaultbackend.controller.auth;
 
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;

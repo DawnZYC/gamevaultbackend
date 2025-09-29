@@ -1,4 +1,4 @@
-package com.sg.nusiss.gamevaultbackend.dto;
+package com.sg.nusiss.gamevaultbackend.dto.library;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

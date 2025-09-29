@@ -1,11 +1,11 @@
-package com.sg.nusiss.gamevaultbackend.controller;
+package com.sg.nusiss.gamevaultbackend.controller.library;
 
-import com.sg.nusiss.gamevaultbackend.dto.OrderDetailDto;
-import com.sg.nusiss.gamevaultbackend.dto.OrderGroupSummaryDto;
-import com.sg.nusiss.gamevaultbackend.dto.OrderItemDto;
-import com.sg.nusiss.gamevaultbackend.entity.OrderItem;
-import com.sg.nusiss.gamevaultbackend.repository.OrderItemRepository;
-import com.sg.nusiss.gamevaultbackend.repository.PurchasedGameActivationCodeRepository;
+import com.sg.nusiss.gamevaultbackend.dto.library.OrderDetailDto;
+import com.sg.nusiss.gamevaultbackend.dto.library.OrderGroupSummaryDto;
+import com.sg.nusiss.gamevaultbackend.dto.library.OrderItemDto;
+import com.sg.nusiss.gamevaultbackend.entity.library.OrderItem;
+import com.sg.nusiss.gamevaultbackend.repository.library.OrderItemRepository;
+import com.sg.nusiss.gamevaultbackend.repository.library.PurchasedGameActivationCodeRepository;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;

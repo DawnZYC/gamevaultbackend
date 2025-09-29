@@ -1,17 +1,19 @@
-package com.sg.nusiss.gamevaultbackend.dto;
+package com.sg.nusiss.gamevaultbackend.dto.library;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
-public class OrderItemDto {
+public class OrderDetailDto {
     public Long orderItemId;
     public Long orderId;
     public Long userId;
     public Long gameId;
-    public BigDecimal unitPrice;
-    public BigDecimal discountPrice;
     public LocalDateTime orderDate;
     public String orderStatus;
+    public BigDecimal unitPrice;
+    public BigDecimal discountPrice;
+    public List<String> activationCodes;
 }
 
 

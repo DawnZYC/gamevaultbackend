@@ -1,4 +1,4 @@
-package com.sg.nusiss.gamevaultbackend.dto;
+package com.sg.nusiss.gamevaultbackend.dto.settings;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;

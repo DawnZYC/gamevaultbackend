@@ -1,4 +1,4 @@
-package com.sg.nusiss.gamevaultbackend.dto;
+package com.sg.nusiss.gamevaultbackend.dto.auth;
 
 import jakarta.validation.constraints.NotBlank;
 

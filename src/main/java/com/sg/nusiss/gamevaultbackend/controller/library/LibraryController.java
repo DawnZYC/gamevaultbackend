@@ -1,10 +1,10 @@
-package com.sg.nusiss.gamevaultbackend.controller;
+package com.sg.nusiss.gamevaultbackend.controller.library;
 
-import com.sg.nusiss.gamevaultbackend.dto.LibraryItemDto;
-import com.sg.nusiss.gamevaultbackend.entity.Game;
-import com.sg.nusiss.gamevaultbackend.entity.PurchasedGameActivationCode;
-import com.sg.nusiss.gamevaultbackend.repository.GameRepository;
-import com.sg.nusiss.gamevaultbackend.repository.PurchasedGameActivationCodeRepository;
+import com.sg.nusiss.gamevaultbackend.dto.library.LibraryItemDto;
+import com.sg.nusiss.gamevaultbackend.entity.library.Game;
+import com.sg.nusiss.gamevaultbackend.entity.library.PurchasedGameActivationCode;
+import com.sg.nusiss.gamevaultbackend.repository.library.GameRepository;
+import com.sg.nusiss.gamevaultbackend.repository.library.PurchasedGameActivationCodeRepository;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
