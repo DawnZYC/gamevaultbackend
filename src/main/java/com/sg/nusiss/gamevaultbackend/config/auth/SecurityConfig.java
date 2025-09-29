@@ -2,9 +2,7 @@ package com.sg.nusiss.gamevaultbackend.config.auth;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.Customizer;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -21,10 +19,11 @@ public class SecurityConfig {
     @Bean
     public BCryptPasswordEncoder passwordEncoder() { return new BCryptPasswordEncoder(); }
 
-    @Bean
-    public AuthenticationManager authenticationManager(AuthenticationConfiguration cfg) throws Exception {
-        return cfg.getAuthenticationManager();
-    }
+    // 移除 AuthenticationManager Bean，避免循环依赖
+    // @Bean
+    // public AuthenticationManager authenticationManager(AuthenticationConfiguration cfg) throws Exception {
+    //     return cfg.getAuthenticationManager();
+    // }
 
     @Bean
     SecurityFilterChain security(HttpSecurity http) throws Exception {

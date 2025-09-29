@@ -23,7 +23,8 @@ import java.util.ArrayList;
  * 认证中间件 - 处理JWT token验证
  * 优化版本：减少重复验证，提高性能
  */
-@Component
+// 暂时禁用这个组件，因为我们使用 Spring Security 的 OAuth2 Resource Server
+// @Component
 public class AuthMiddleware extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
@@ -108,6 +109,8 @@ public class AuthMiddleware extends OncePerRequestFilter {
                requestURI.startsWith("/api/auth/check-email") ||
                requestURI.startsWith("/api/auth/check-username") ||
                requestURI.startsWith("/api/auth/verify-email") ||
+               requestURI.startsWith("/api/auth/logout") ||
+               requestURI.startsWith("/.well-known/jwks.json") ||
                requestURI.startsWith("/error") ||
                requestURI.equals("/favicon.ico");
     }

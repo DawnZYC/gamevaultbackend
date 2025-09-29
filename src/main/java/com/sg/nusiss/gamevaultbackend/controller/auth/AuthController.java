@@ -8,12 +8,14 @@ import com.sg.nusiss.gamevaultbackend.entity.auth.User;
 import com.sg.nusiss.gamevaultbackend.repository.auth.UserRepository;
 import com.sg.nusiss.gamevaultbackend.security.auth.JwtUtil;
 import jakarta.validation.Valid;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+// 移除 AuthenticationManager 相关导入，手动验证用户凭据
+// import org.springframework.security.authentication.AuthenticationManager;
+// import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
 @RestController
@@ -21,12 +23,10 @@ import java.util.Map;
 public class AuthController {
     private final UserRepository repo;
     private final BCryptPasswordEncoder encoder;
-    private final AuthenticationManager authManager;
     private final JwtUtil jwt;
 
-    public AuthController(UserRepository repo, BCryptPasswordEncoder encoder,
-                          AuthenticationManager authManager, JwtUtil jwt) {
-        this.repo = repo; this.encoder = encoder; this.authManager = authManager; this.jwt = jwt;
+    public AuthController(UserRepository repo, BCryptPasswordEncoder encoder, JwtUtil jwt) {
+        this.repo = repo; this.encoder = encoder; this.jwt = jwt;
     }
 
     @PostMapping("/register")
@@ -60,9 +60,16 @@ public class AuthController {
                     .orElse(principal); // If email doesn't exist, let authentication fail
         }
 
-        authManager.authenticate(new UsernamePasswordAuthenticationToken(principal, req.password));
+        // 手动验证用户凭据，避免使用 AuthenticationManager 造成循环依赖
+        User u = repo.findByUsername(principal)
+                .orElseThrow(() -> new RuntimeException("Invalid username or password"));
+        
+        // 验证密码
+        if (!encoder.matches(req.password, u.getPassword())) {
+            throw new RuntimeException("Invalid username or password");
+        }
 
-        User u = repo.findByUsername(principal).orElseThrow();
+        // 更新最后登录时间
         u.setLastLoginTime(LocalDateTime.now());
         repo.save(u);
 
@@ -121,18 +128,19 @@ public class AuthController {
                 // 记录错误日志，然后回退到JWT数据
                 System.err.println("Failed to fetch user from database: " + e.getMessage());
                 e.printStackTrace();
+                // 不要抛出异常，继续执行回退逻辑
             }
         }
         
         // 回退到JWT中的数据
-        return Map.of(
-                "userId", uid != null ? uid : 0L,  // 前端期望 userId
-                "username", jwtToken.getSubject(),
-                "email", email != null ? email : "",
-                "profile", null,  // 暂时为 null，后续可以扩展
-                "createdAt", "2024-01-01T00:00:00.000Z",  // 暂时使用默认值
-                "updatedAt", "2024-01-01T00:00:00.000Z"   // 暂时使用默认值
-        );
+        Map<String, Object> result = new HashMap<>();
+        result.put("userId", uid != null ? uid : 0L);  // 前端期望 userId
+        result.put("username", jwtToken.getSubject());
+        result.put("email", email != null ? email : "");
+        result.put("profile", null);  // 暂时为 null，后续可以扩展
+        result.put("createdAt", "2024-01-01T00:00:00.000Z");  // 暂时使用默认值
+        result.put("updatedAt", "2024-01-01T00:00:00.000Z");   // 暂时使用默认值
+        return result;
     }
 
     // Logout endpoint: since JWT is stateless, we just return success
