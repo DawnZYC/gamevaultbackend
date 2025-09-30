@@ -1,7 +1,5 @@
 package com.sg.nusiss.gamevaultbackend.common;
 
-import lombok.Data;
-
 import java.io.Serializable;
 
 /**
@@ -10,7 +8,6 @@ import java.io.Serializable;
  * @Date 2025/9/29
  * @Description
  */
-@Data
 public class BaseResponse<T> implements Serializable {
 
     private int code;
@@ -31,6 +28,30 @@ public class BaseResponse<T> implements Serializable {
 
     public BaseResponse(ErrorCode errorCode) {
         this(errorCode.getCode(), null, errorCode.getMessage());
+    }
+
+    public int getCode() {
+        return code;
+    }
+
+    public void setCode(int code) {
+        this.code = code;
+    }
+
+    public T getData() {
+        return data;
+    }
+
+    public void setData(T data) {
+        this.data = data;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
     }
 
 }

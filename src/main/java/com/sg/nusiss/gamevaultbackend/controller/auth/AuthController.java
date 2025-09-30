@@ -115,14 +115,14 @@ public class AuthController {
             try {
                 User user = repo.findById(uid).orElse(null);
                 if (user != null) {
-                    return Map.of(
-                            "userId", user.getUserId(),
-                            "username", user.getUsername(),
-                            "email", user.getEmail() != null ? user.getEmail() : "",
-                            "profile", null,  // 暂时为 null，后续可以扩展
-                            "createdAt", user.getRegisterTime() != null ? user.getRegisterTime().toString() : "2024-01-01T00:00:00.000Z",
-                            "updatedAt", user.getLastLoginTime() != null ? user.getLastLoginTime().toString() : "2024-01-01T00:00:00.000Z"
-                    );
+                    Map<String, Object> result = new HashMap<>();
+                    result.put("userId", user.getUserId());
+                    result.put("username", user.getUsername());
+                    result.put("email", user.getEmail() != null ? user.getEmail() : "");
+                    result.put("profile", null);  // 暂时为 null，后续可以扩展
+                    result.put("createdAt", user.getRegisterTime() != null ? user.getRegisterTime().toString() : "2024-01-01T00:00:00.000Z");
+                    result.put("updatedAt", user.getLastLoginTime() != null ? user.getLastLoginTime().toString() : "2024-01-01T00:00:00.000Z");
+                    return result;
                 }
             } catch (Exception e) {
                 // 记录错误日志，然后回退到JWT数据
