@@ -12,6 +12,7 @@ import com.sg.nusiss.gamevaultbackend.exception.BusinessException;
 import com.sg.nusiss.gamevaultbackend.repository.friend.FriendRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -71,6 +72,7 @@ public class FriendService {
     /**
      * 删除好友
      */
+    @Transactional
     public void deleteFriend(DeleteFriendRequest req) {
         friendRepository.deleteByUserIdAndFriendId(req.getUserId(), req.getFriendId());
         friendRepository.deleteByUserIdAndFriendId(req.getFriendId(), req.getUserId());
