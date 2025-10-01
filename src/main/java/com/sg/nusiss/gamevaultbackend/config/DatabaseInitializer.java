@@ -30,9 +30,9 @@ public class DatabaseInitializer implements CommandLineRunner {
         logger.info("开始初始化数据库表结构...");
         
         try {
-            // 读取并执行完整的论坛数据库脚本
-            executeSqlScript("sql/forum_complete_schema.sql");
-            logger.info("论坛数据库表结构初始化完成");
+            // 读取并执行完整的数据库脚本
+            executeSqlScript("sql/complete_schema.sql");
+            logger.info("数据库表结构初始化完成");
         } catch (Exception e) {
             logger.error("数据库初始化失败", e);
             // 不抛出异常，避免影响应用启动

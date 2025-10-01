@@ -38,7 +38,7 @@ public class AuthController {
         u.setEmail(req.email);
         u.setUsername(req.username);
         u.setPassword(encoder.encode(req.password));
-        u.setRegisterTime(LocalDateTime.now());
+        u.setCreatedDate(LocalDateTime.now());
         u = repo.save(u); // Ensure we get the generated userId
 
         String token = jwt.generateToken(u.getUserId(), u.getUsername(), u.getEmail());
@@ -120,8 +120,8 @@ public class AuthController {
                     result.put("username", user.getUsername());
                     result.put("email", user.getEmail() != null ? user.getEmail() : "");
                     result.put("profile", null);  // 暂时为 null，后续可以扩展
-                    result.put("createdAt", user.getRegisterTime() != null ? user.getRegisterTime().toString() : "2024-01-01T00:00:00.000Z");
-                    result.put("updatedAt", user.getLastLoginTime() != null ? user.getLastLoginTime().toString() : "2024-01-01T00:00:00.000Z");
+                    result.put("createdAt", user.getCreatedDate() != null ? user.getCreatedDate().toString() : "2024-01-01T00:00:00.000Z");
+                    result.put("updatedAt", user.getUpdatedDate() != null ? user.getUpdatedDate().toString() : "2024-01-01T00:00:00.000Z");
                     return result;
                 }
             } catch (Exception e) {
