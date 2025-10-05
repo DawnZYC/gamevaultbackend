@@ -3,15 +3,19 @@ package com.sg.nusiss.gamevaultbackend.controller.friend;
 import com.sg.nusiss.gamevaultbackend.common.BaseResponse;
 import com.sg.nusiss.gamevaultbackend.common.ErrorCode;
 import com.sg.nusiss.gamevaultbackend.common.ResultUtils;
-import com.sg.nusiss.gamevaultbackend.dto.friend.request.AcceptFriendRequest;
-import com.sg.nusiss.gamevaultbackend.dto.friend.request.DeleteFriendRequest;
-import com.sg.nusiss.gamevaultbackend.dto.friend.request.ListFriendRequest;
-import com.sg.nusiss.gamevaultbackend.dto.friend.request.SendFriendRequest;
-import com.sg.nusiss.gamevaultbackend.dto.friend.response.ListFriendResponse;
+import com.sg.nusiss.gamevaultbackend.dto.friend.request.HandleFriendRequestRequest;
+import com.sg.nusiss.gamevaultbackend.dto.friend.request.SendFriendRequestRequest;
+import com.sg.nusiss.gamevaultbackend.dto.friend.response.FriendRequestResponse;
+import com.sg.nusiss.gamevaultbackend.dto.friend.response.FriendResponse;
+import com.sg.nusiss.gamevaultbackend.dto.friend.response.UserSearchResponse;
 import com.sg.nusiss.gamevaultbackend.exception.BusinessException;
+import com.sg.nusiss.gamevaultbackend.security.auth.SecurityUtils;
 import com.sg.nusiss.gamevaultbackend.service.friend.FriendService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * @ClassName FriendController
@@ -21,61 +25,79 @@ import org.springframework.web.bind.annotation.*;
  */
 
 @RestController
-@RequestMapping("/friend")
+@RequestMapping("/api/friend")
+@RequiredArgsConstructor
 public class FriendController {
-    @Autowired
-    private FriendService friendService;
+
+    private final FriendService friendService;
+
+    /**
+     * 搜索用户
+     */
+    @GetMapping("/search")
+    public BaseResponse<List<UserSearchResponse>> searchUsers(@RequestParam String keyword) {
+        Long currentUserId = SecurityUtils.getCurrentUserId();
+        List<UserSearchResponse> users = friendService.searchUsers(keyword, currentUserId);
+        return ResultUtils.success(users);
+    }
 
     /**
      * 发送好友请求
      */
-    @PostMapping("/request")
-    public BaseResponse<Boolean> sendFriendRequest(@RequestBody SendFriendRequest req) {
-        if (req == null || req.getUserId() == null || req.getFriendId() == null) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        if (req.getUserId().equals(req.getFriendId())) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "不能添加自己为好友");
-        }
-        friendService.sendFriendRequest(req);
-        return ResultUtils.success(true);
+    @PostMapping("/request/send")
+    public BaseResponse<Void> sendFriendRequest(@RequestBody SendFriendRequestRequest request) {
+        Long currentUserId = SecurityUtils.getCurrentUserId();
+        friendService.sendFriendRequest(currentUserId, request.getToUserId(), request.getMessage());
+        return ResultUtils.success(null);
     }
 
     /**
-     * 接受好友请求
+     * 获取收到的好友请求
      */
-    @PostMapping("/accept")
-    public BaseResponse<Boolean> acceptFriendRequest(@RequestBody AcceptFriendRequest req) {
-        if (req == null || req.getUserId() == null || req.getFriendId() == null) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        friendService.acceptFriendRequest(req);
-        return ResultUtils.success(true);
+    @GetMapping("/request/received")
+    public BaseResponse<List<FriendRequestResponse>> getReceivedRequests() {
+        Long currentUserId = SecurityUtils.getCurrentUserId();
+        List<FriendRequestResponse> requests = friendService.getReceivedRequests(currentUserId);
+        return ResultUtils.success(requests);
+    }
+
+    /**
+     * 获取发送的好友请求
+     */
+    @GetMapping("/request/sent")
+    public BaseResponse<List<FriendRequestResponse>> getSentRequests() {
+        Long currentUserId = SecurityUtils.getCurrentUserId();
+        List<FriendRequestResponse> requests = friendService.getSentRequests(currentUserId);
+        return ResultUtils.success(requests);
+    }
+
+    /**
+     * 处理好友请求
+     */
+    @PostMapping("/request/handle")
+    public BaseResponse<Void> handleFriendRequest(@RequestBody HandleFriendRequestRequest request) {
+        Long currentUserId = SecurityUtils.getCurrentUserId();
+        friendService.handleFriendRequest(request.getRequestId(), request.getAccept(), currentUserId);
+        return ResultUtils.success(null);
+    }
+
+    /**
+     * 获取好友列表
+     */
+    @GetMapping("/list")
+    public BaseResponse<List<FriendResponse>> getFriends() {
+        Long currentUserId = SecurityUtils.getCurrentUserId();
+        List<FriendResponse> friends = friendService.getFriends(currentUserId);
+        return ResultUtils.success(friends);
     }
 
     /**
      * 删除好友
      */
-    @PostMapping("/delete")
-    public BaseResponse<Boolean> deleteFriend(@RequestBody DeleteFriendRequest req) {
-        if (req == null || req.getUserId() == null || req.getFriendId() == null) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        friendService.deleteFriend(req);
-        return ResultUtils.success(true);
-    }
-
-    /**
-     * 列出好友列表
-     */
-    @GetMapping("/list")
-    public BaseResponse<ListFriendResponse> listFriends(@RequestParam Long userId) {
-        if (userId == null) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR);
-        }
-        ListFriendRequest req = new ListFriendRequest();
-        req.setUserId(userId);
-        ListFriendResponse resp = friendService.listFriends(req);
-        return ResultUtils.success(resp);
+    @DeleteMapping("/{friendId}")
+    public BaseResponse<Void> deleteFriend(@PathVariable Long friendId) {
+        Long currentUserId = SecurityUtils.getCurrentUserId();
+        friendService.deleteFriend(currentUserId, friendId);
+        return ResultUtils.success(null);
     }
 }
