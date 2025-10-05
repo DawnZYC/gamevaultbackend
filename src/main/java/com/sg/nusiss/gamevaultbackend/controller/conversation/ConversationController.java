@@ -5,7 +5,6 @@ import com.sg.nusiss.gamevaultbackend.common.ResultUtils;
 import com.sg.nusiss.gamevaultbackend.dto.conversation.request.*;
 import com.sg.nusiss.gamevaultbackend.dto.conversation.response.*;
 import com.sg.nusiss.gamevaultbackend.entity.conversation.Conversation;
-import com.sg.nusiss.gamevaultbackend.entity.conversation.Member;
 import com.sg.nusiss.gamevaultbackend.security.auth.SecurityUtils;
 import com.sg.nusiss.gamevaultbackend.service.conversation.ConversationService;
 import org.springframework.web.bind.annotation.*;
@@ -96,17 +95,16 @@ public class ConversationController {
         return ResultUtils.success(members);
     }
 
-    @PostMapping("/addMember")
-    public BaseResponse<AddMemberResponse> addMember(
-            @RequestBody AddMemberRequest request) {
-        Member member = conversationService.addMember(request.getConversationId(), request.getUserId());
-        return ResultUtils.success(new AddMemberResponse(member.getId()));
-    }
+    /**
+     * 添加成员到群聊
+     */
+    @PostMapping("/{conversationId}/members/add")
+    public BaseResponse<Void> addMembers(
+            @PathVariable Long conversationId,
+            @RequestBody AddMembersRequest request) {
 
-    @PostMapping("/removeMember")
-    public BaseResponse<RemoveMemberResponse> removeMember(
-            @RequestBody RemoveMemberRequest request) {
-        conversationService.removeMember(request.getConversationId(), request.getOwnerId(), request.getUserId());
-        return ResultUtils.success(new RemoveMemberResponse("Member removed"));
+        Long currentUserId = SecurityUtils.getCurrentUserId();
+        conversationService.addMembers(conversationId, request.getUserIds(), currentUserId);
+        return ResultUtils.success(null);
     }
 }

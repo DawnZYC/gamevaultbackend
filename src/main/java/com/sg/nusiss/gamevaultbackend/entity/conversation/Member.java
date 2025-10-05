@@ -1,10 +1,8 @@
 package com.sg.nusiss.gamevaultbackend.entity.conversation;
 
+import com.sg.nusiss.gamevaultbackend.entity.auth.User;
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
@@ -32,8 +30,10 @@ public class Member {
     private Conversation conversation;
 
     // 用户 ID
-    @Column(name = "user_id", nullable = false)
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id", nullable = false)
+    @ToString.Exclude
+    private User user;
 
     // 角色（普通成员 / 群主 / 管理员）
     @Column(nullable = false, length = 20)

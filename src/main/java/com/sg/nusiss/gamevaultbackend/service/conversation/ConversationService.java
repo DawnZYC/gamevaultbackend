@@ -10,7 +10,9 @@ import com.sg.nusiss.gamevaultbackend.exception.BusinessException;
 import com.sg.nusiss.gamevaultbackend.repository.auth.UserRepository;
 import com.sg.nusiss.gamevaultbackend.repository.conversation.ConversationRepository;
 import com.sg.nusiss.gamevaultbackend.repository.conversation.MemberRepository;
+import com.sg.nusiss.gamevaultbackend.repository.friend.FriendshipRepository;
 import com.sg.nusiss.gamevaultbackend.repository.message.MessageRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,22 +33,14 @@ import java.util.stream.Collectors;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class ConversationService {
 
     private final ConversationRepository conversationRepository;
     private final MemberRepository memberRepository;
     private final MessageRepository messageRepository;
     private final UserRepository userRepository;
-
-    public ConversationService(ConversationRepository conversationRepository,
-                               MemberRepository memberRepository,
-                               MessageRepository messageRepository,
-                               UserRepository userRepository) {
-        this.conversationRepository = conversationRepository;
-        this.memberRepository = memberRepository;
-        this.messageRepository = messageRepository;
-        this.userRepository = userRepository;
-    }
+    private final FriendshipRepository friendshipRepository;
 
     /**
      * Create a conversation
@@ -61,6 +55,10 @@ public class ConversationService {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "ownerId 不能为空");
         }
 
+        // 查询 owner 用户
+        User owner = userRepository.findById(ownerId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_ERROR, "用户不存在"));
+
         // 使用 Builder 模式创建
         Conversation conversation = Conversation.builder()
                 .title(title)
@@ -72,7 +70,7 @@ public class ConversationService {
         // 将群主加入成员表
         Member ownerMember = new Member();
         ownerMember.setConversation(conversation);
-        ownerMember.setUserId(ownerId);
+        ownerMember.setUser(owner);
         ownerMember.setRole("owner");
         ownerMember.setJoinedAt(LocalDateTime.now());
         memberRepository.save(ownerMember);
@@ -202,19 +200,7 @@ public class ConversationService {
         return members.stream()
                 .map(member -> {
                     // 从用户表查询用户信息
-                    User user = userRepository.findById(member.getUserId())
-                            .orElse(null);
-
-                    if (user == null) {
-                        // 用户不存在时返回基本信息
-                        return new MemberResponse(
-                                member.getUserId(),
-                                "未知用户",
-                                "",
-                                member.getRole(),
-                                member.getJoinedAt()
-                        );
-                    }
+                    User user = member.getUser();
 
                     return new MemberResponse(
                             user.getUserId(),
@@ -228,60 +214,51 @@ public class ConversationService {
     }
 
     /**
-     * 添加成员
+     * 添加成员到群聊（只能添加好友）
      */
-    public Member addMember(Long conversationId, Long userId) {
-        if (conversationId == null || conversationId == 0 || userId == null || userId == 0) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "conversationId or userId missing");
+    @Transactional
+    public void addMembers(Long conversationId, List<Long> userIds, Long currentUserId) {
+        // 验证群聊存在
+        Conversation conversation = conversationRepository.findById(conversationId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_ERROR, "群聊不存在"));
+
+        if (!"active".equals(conversation.getStatus())) {
+            throw new BusinessException(ErrorCode.OPERATION_ERROR, "群聊已解散");
         }
 
-        Conversation conv = conversationRepository.findById(conversationId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_ERROR, "Conversation not found"));
+        // 验证当前用户是群成员
+        memberRepository.findByConversationIdAndUserIdAndIsActive(conversationId, currentUserId, true)
+                .orElseThrow(() -> new BusinessException(ErrorCode.NO_AUTH_ERROR, "您不是群成员"));
 
-        if (!"active".equals(conv.getStatus())) {
-            throw new BusinessException(ErrorCode.OPERATION_ERROR, "Conversation not active");
+        LocalDateTime now = LocalDateTime.now();
+
+        for (Long userId : userIds) {
+            // 验证用户存在
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_ERROR, "用户不存在"));
+
+            // 验证是好友关系
+            friendshipRepository.findByUserIdAndFriendIdAndIsActive(currentUserId, userId, true)
+                    .orElseThrow(() -> new BusinessException(ErrorCode.OPERATION_ERROR,
+                            "只能邀请好友加入群聊：" + user.getUsername()));
+
+            // 检查是否已是成员
+            Optional<Member> existingMember = memberRepository
+                    .findByConversationIdAndUserIdAndIsActive(conversationId, userId, true);
+
+            if (existingMember.isPresent()) {
+                continue; // 已是成员，跳过
+            }
+
+            // 创建新成员
+            Member newMember = new Member();
+            newMember.setConversation(conversation);
+            newMember.setUser(user);
+            newMember.setRole("member");
+            newMember.setJoinedAt(now);
+            newMember.setIsActive(true);
+
+            memberRepository.save(newMember);
         }
-
-        // whether is user inside conversation
-        Optional<Member> existing = memberRepository.findByConversation(conv).stream()
-                .filter(m -> m.getUserId().equals(userId))
-                .findFirst();
-
-        if (existing.isPresent()) {
-            throw new BusinessException(ErrorCode.OPERATION_ERROR, "User already in conversation");
-        }
-
-        Member member = new Member();
-        member.setConversation(conv);
-        member.setUserId(userId);
-        member.setRole("member");
-        member.setJoinedAt(LocalDateTime.now());
-
-        return memberRepository.save(member);
-    }
-
-
-
-    /**
-     * 移除成员
-     */
-    public void removeMember(Long conversationId, Long ownerId, Long userId) {
-        Conversation conv = conversationRepository.findById(conversationId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_ERROR, "Conversation not found"));
-
-        if (!"active".equals(conv.getStatus())) {
-            throw new BusinessException(ErrorCode.OPERATION_ERROR, "Conversation is dissolved");
-        }
-
-        if (!conv.getOwnerId().equals(ownerId)) {
-            throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "Only owner can remove members");
-        }
-
-        Member member = memberRepository.findByConversation(conv).stream()
-                .filter(m -> m.getUserId().equals(userId))
-                .findFirst()
-                .orElseThrow(() -> new BusinessException(ErrorCode.NOT_FOUND_ERROR, "Member not in conversation"));
-
-        memberRepository.delete(member);
     }
 }
