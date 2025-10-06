@@ -23,9 +23,18 @@ spring:
         dialect: org.hibernate.dialect.PostgreSQLDialect
     show-sql: true
   jpa.hibernate.naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 10MB
+      enabled: true
 
 app:
   jwt:
     # Replace with ultra-long random string (at least 64 bytes)
     secret: "F3NfhRgpwaw0zWvhLtGnDOHmZomVtzpdt9Js-UkDjGJYTe49kZgKjWoeNCk7VdLU5l5F_eKk5k7nrYzKX8SwA"
     expiration-minutes: 120
+  upload:
+    path: uploads
+    max-file-size: 5MB
+    max-request-size: 10MB

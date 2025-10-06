@@ -33,6 +33,7 @@ public class SecurityConfig {
                 .authorizeHttpRequests(a -> a
                         .requestMatchers("/api/auth/login","/api/auth/register","/api/auth/check-email","/api/auth/check-username","/api/auth/logout","/.well-known/jwks.json").permitAll()
                         .requestMatchers("/api/forum/posts","/api/forum/posts/**").permitAll()  // 论坛帖子可以公开访问
+                        .requestMatchers("/uploads/**").permitAll()  // 允许公开访问上传的文件（如头像）
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth -> oauth.jwt(Customizer.withDefaults())); // ✅ Recommended approach

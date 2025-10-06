@@ -40,3 +40,4 @@ mvnw
 mvnw.cmd
 
 docker/
+.DS_Store
