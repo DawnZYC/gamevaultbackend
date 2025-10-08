@@ -24,6 +24,19 @@ spring:
     show-sql: true
   jpa.hibernate.naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
+  data:
+    redis:
+      host: localhost
+      database: 0
+      port: 12003
+      timeout: 3000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: -1ms
+
 app:
   jwt:
     # Replace with ultra-long random string (at least 64 bytes)
