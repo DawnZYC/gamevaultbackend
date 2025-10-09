@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sg.nusiss.gamevaultbackend.mapper.forum.ForumContentLikeMapper">
+
+    <!-- ResultMap -->
+    <resultMap id="UserContentRelationResultMap" type="UserContentRelation">
+        <id property="id" column="id"/>
+        <result property="userId" column="user_id"/>
+        <result property="contentId" column="content_id"/>
+        <result property="relationType" column="relation_type_id"/>
+        <result property="createdDate" column="created_date"/>
+    </resultMap>
+
+    <!-- 插入点赞关系 -->
+    <insert id="insert" parameterType="UserContentRelation"
+            useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO user_content_relations (user_id, content_id, relation_type_id, created_date)
+        VALUES (#{userId}, #{contentId}, #{relationType}, #{createdDate})
+        ON CONFLICT (user_id, content_id, relation_type_id) DO NOTHING
+    </insert>
+
+    <!-- 删除点赞关系 -->
+    <delete id="deleteByUserAndContentAndType">
+        DELETE FROM user_content_relations
+        WHERE user_id = #{userId}
+          AND content_id = #{contentId}
+          AND relation_type_id = #{relationType}
+    </delete>
+
+    <!-- 查找点赞关系 -->
+    <select id="findByUserAndContentAndType" resultMap="UserContentRelationResultMap">
+        SELECT id, user_id, content_id, relation_type_id, created_date
+        FROM user_content_relations
+        WHERE user_id = #{userId}
+          AND content_id = #{contentId}
+          AND relation_type_id = #{relationType}
+    </select>
+
+    <!-- 检查是否已点赞 -->
+    <select id="existsByUserAndContentAndType" resultType="boolean">
+        SELECT EXISTS(
+            SELECT 1 FROM user_content_relations
+            WHERE user_id = #{userId}
+              AND content_id = #{contentId}
+              AND relation_type_id = #{relationType}
+        )
+    </select>
+
+    <!-- 统计点赞数 -->
+    <select id="countByContentAndType" resultType="int">
+        SELECT COUNT(*)
+        FROM user_content_relations
+        WHERE content_id = #{contentId}
+          AND relation_type_id = #{relationType}
+    </select>
+
+    <!-- 获取点赞用户ID列表 -->
+    <select id="findUserIdsByContentAndType" resultType="long">
+        SELECT user_id
+        FROM user_content_relations
+        WHERE content_id = #{contentId}
+          AND relation_type_id = #{relationType}
+        ORDER BY created_date DESC
+    </select>
+
+    <!-- 获取用户点赞的内容ID列表 -->
+    <select id="findContentIdsByUserAndType" resultType="long">
+        SELECT content_id
+        FROM user_content_relations
+        WHERE user_id = #{userId}
+          AND relation_type_id = #{relationType}
+        ORDER BY created_date DESC
+    </select>
+
+    <!-- 批量检查点赞状态 -->
+    <select id="findLikedContentIdsByUserAndType" resultType="long">
+        SELECT content_id
+        FROM user_content_relations
+        WHERE user_id = #{userId}
+        AND relation_type_id = #{relationType}
+        AND content_id IN
+        <foreach item="contentId" collection="contentIds" open="(" separator="," close=")">
+            #{contentId}
+        </foreach>
+    </select>
+
+    <!-- 获取用户最近点赞 -->
+    <select id="findRecentByUserAndType" resultMap="UserContentRelationResultMap">
+        SELECT id, user_id, content_id, relation_type_id, created_date
+        FROM user_content_relations
+        WHERE user_id = #{userId}
+          AND relation_type_id = #{relationType}
+        ORDER BY created_date DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 获取内容的最近点赞 -->
+    <select id="findRecentByContentAndType" resultMap="UserContentRelationResultMap">
+        SELECT id, user_id, content_id, relation_type_id, created_date
+        FROM user_content_relations
+        WHERE content_id = #{contentId}
+          AND relation_type_id = #{relationType}
+        ORDER BY created_date DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 删除内容的所有点赞 -->
+    <delete id="deleteByContentAndType">
+        DELETE FROM user_content_relations
+        WHERE content_id = #{contentId}
+          AND relation_type_id = #{relationType}
+    </delete>
+
+    <!-- 删除用户的所有点赞 -->
+    <delete id="deleteByUserAndType">
+        DELETE FROM user_content_relations
+        WHERE user_id = #{userId}
+          AND relation_type_id = #{relationType}
+    </delete>
+
+</mapper>

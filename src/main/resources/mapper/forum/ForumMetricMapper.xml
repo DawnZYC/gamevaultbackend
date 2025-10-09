@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sg.nusiss.gamevaultbackend.mapper.forum.ForumMetricMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="ContentMetricResultMap" type="ContentMetric">
+        <id property="id" column="id"/>
+        <result property="contentId" column="content_id"/>
+        <result property="metricId" column="metric_id"/>
+        <result property="metricValue" column="metric_value"/>
+        <result property="updatedDate" column="updated_date"/>
+    </resultMap>
+
+    <!-- 插入或更新统计值 -->
+    <insert id="insertOrUpdate" parameterType="ContentMetric">
+        INSERT INTO content_metrics (content_id, metric_id, metric_value, updated_date)
+        VALUES (#{contentId}, #{metricId}, #{metricValue}, #{updatedDate})
+        ON CONFLICT (content_id, metric_id)
+        DO UPDATE SET
+            metric_value = #{metricValue},
+            updated_date = CURRENT_TIMESTAMP
+    </insert>
+
+    <!-- 增加统计值 -->
+    <update id="incrementMetric">
+        INSERT INTO content_metrics (content_id, metric_id, metric_value, updated_date)
+        VALUES (
+            #{contentId},
+            (SELECT metric_id FROM metric_definitions WHERE metric_name = #{metricName}),
+            #{increment},
+            CURRENT_TIMESTAMP
+        )
+        ON CONFLICT (content_id, metric_id)
+        DO UPDATE SET
+            metric_value = content_metrics.metric_value + #{increment},
+            updated_date = CURRENT_TIMESTAMP
+    </update>
+
+    <!-- 设置统计值 -->
+    <update id="setMetricValue">
+        INSERT INTO content_metrics (content_id, metric_id, metric_value, updated_date)
+        VALUES (
+            #{contentId},
+            (SELECT metric_id FROM metric_definitions WHERE metric_name = #{metricName}),
+            #{value},
+            CURRENT_TIMESTAMP
+        )
+        ON CONFLICT (content_id, metric_id)
+        DO UPDATE SET
+            metric_value = #{value},
+            updated_date = CURRENT_TIMESTAMP
+    </update>
+
+    <!-- 获取单个统计值 -->
+    <select id="getMetricValue" resultType="Integer">
+        SELECT cm.metric_value
+        FROM content_metrics cm
+        JOIN metric_definitions md ON cm.metric_id = md.metric_id
+        WHERE cm.content_id = #{contentId}
+          AND md.metric_name = #{metricName}
+    </select>
+
+    <!-- 获取内容的所有统计数据 -->
+    <select id="getContentMetrics" resultType="map">
+        SELECT
+            md.metric_name as key,
+            cm.metric_value as value
+        FROM content_metrics cm
+        JOIN metric_definitions md ON cm.metric_id = md.metric_id
+        WHERE cm.content_id = #{contentId}
+    </select>
+
+    <!-- 批量获取统计数据 -->
+    <select id="getBatchMetrics" resultType="map">
+        SELECT
+            cm.content_id as key,
+            cm.metric_value as value
+        FROM content_metrics cm
+        JOIN metric_definitions md ON cm.metric_id = md.metric_id
+        WHERE cm.content_id IN
+        <foreach item="contentId" collection="contentIds" open="(" separator="," close=")">
+            #{contentId}
+        </foreach>
+        AND md.metric_name = #{metricName}
+    </select>
+
+    <!-- 查询热门内容ID列表 -->
+    <select id="findTopContentsByMetric" resultType="Long">
+        SELECT cm.content_id
+        FROM content_metrics cm
+        JOIN metric_definitions md ON cm.metric_id = md.metric_id
+        JOIN contents c ON cm.content_id = c.content_id
+        WHERE md.metric_name = #{metricName}
+          AND c.status = 'active'
+          AND c.content_type = 'post'
+        ORDER BY cm.metric_value DESC
+        LIMIT #{limit}
+    </select>
+
+</mapper>

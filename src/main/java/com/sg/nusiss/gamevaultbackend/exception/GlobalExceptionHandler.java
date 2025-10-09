@@ -3,7 +3,8 @@ package com.sg.nusiss.gamevaultbackend.exception;
 import com.sg.nusiss.gamevaultbackend.common.BaseResponse;
 import com.sg.nusiss.gamevaultbackend.common.ErrorCode;
 import com.sg.nusiss.gamevaultbackend.common.ResultUtils;
-import lombok.extern.slf4j.Slf4j;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -14,8 +15,9 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
  * @Description 全局异常处理类
  */
 @RestControllerAdvice
-@Slf4j
 public class GlobalExceptionHandler {
+
+    private static final Logger log = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(BusinessException.class)
     public BaseResponse<?> businessExceptionHandler(BusinessException e) {

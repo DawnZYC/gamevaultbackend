@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sg.nusiss.gamevaultbackend.mapper.forum.ForumContentMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="ContentResultMap" type="ForumContent">
+        <id property="contentId" column="content_id"/>
+        <result property="contentType" column="content_type"/>
+        <result property="title" column="title"/>
+        <result property="body" column="body"/>
+        <result property="bodyPlain" column="body_plain"/>
+        <result property="authorId" column="author_id"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="status" column="status"/>
+        <result property="createdDate" column="created_date"/>
+        <result property="updatedDate" column="updated_date"/>
+        <result property="viewCount" column="view_count"/>
+        <result property="likeCount" column="like_count"/>
+        <result property="replyCount" column="reply_count"/> <!-- ← 新增这行 -->
+    </resultMap>
+
+    <!-- 基础查询片段 -->
+    <sql id="BaseColumns">
+        content_id, content_type, title, body, body_plain,
+        author_id, parent_id, status, created_date, updated_date
+    </sql>
+
+    <!-- 根据ID查询 -->
+    <select id="findById" resultMap="ContentResultMap">
+        SELECT
+            c.content_id,
+            c.content_type,
+            c.title,
+            c.body,
+            c.body_plain,
+            c.author_id,
+            c.parent_id,
+            c.status,
+            c.created_date,
+            c.updated_date,
+            COALESCE(MAX(CASE WHEN md.metric_name = 'view_count' THEN cm.metric_value END), 0) as view_count,
+            COALESCE(MAX(CASE WHEN md.metric_name = 'like_count' THEN cm.metric_value END), 0) as like_count,
+            COALESCE(MAX(CASE WHEN md.metric_name = 'reply_count' THEN cm.metric_value END), 0) as reply_count
+        FROM contents c
+                 LEFT JOIN content_metrics cm ON c.content_id = cm.content_id
+                 LEFT JOIN metric_definitions md ON cm.metric_id = md.metric_id
+        WHERE c.content_id = #{contentId} AND c.status = 'active'
+        GROUP BY c.content_id, c.content_type, c.title, c.body, c.body_plain,
+                 c.author_id, c.parent_id, c.status, c.created_date, c.updated_date
+    </select>
+
+    <!-- 插入新内容 -->
+    <insert id="insert" parameterType="ForumContent" useGeneratedKeys="true" keyProperty="contentId">
+        INSERT INTO contents (
+            content_type, title, body, body_plain, author_id, parent_id,
+            status, created_date, updated_date
+        ) VALUES (
+                     #{contentType}, #{title}, #{body}, #{bodyPlain}, #{authorId}, #{parentId},
+                     #{status}, #{createdDate}, #{updatedDate}
+                 )
+    </insert>
+
+    <!-- 更新内容 -->
+    <update id="update" parameterType="ForumContent">
+        UPDATE contents SET
+                            title = #{title},
+                            body = #{body},
+                            body_plain = #{bodyPlain},
+                            status = #{status},
+                            updated_date = #{updatedDate}
+        WHERE content_id = #{contentId}
+    </update>
+
+    <!-- 软删除 -->
+    <update id="softDelete">
+        UPDATE contents SET
+                            status = 'deleted',
+                            updated_date = CURRENT_TIMESTAMP
+        WHERE content_id = #{contentId}
+    </update>
+
+    <!-- 查询活跃帖子（分页） -->
+    <select id="findActivePosts" resultMap="ContentResultMap">
+        SELECT
+            c.content_id,
+            c.content_type,
+            c.title,
+            c.body,
+            c.body_plain,
+            c.author_id,
+            c.parent_id,
+            c.status,
+            c.created_date,
+            c.updated_date,
+            COALESCE(MAX(CASE WHEN md.metric_name = 'view_count' THEN cm.metric_value END), 0) as view_count,
+            COALESCE(MAX(CASE WHEN md.metric_name = 'like_count' THEN cm.metric_value END), 0) as like_count,
+            COALESCE(MAX(CASE WHEN md.metric_name = 'reply_count' THEN cm.metric_value END), 0) as reply_count
+        FROM contents c
+                 LEFT JOIN content_metrics cm ON c.content_id = cm.content_id
+                 LEFT JOIN metric_definitions md ON cm.metric_id = md.metric_id
+        WHERE c.content_type = 'post' AND c.status = 'active'
+        GROUP BY c.content_id, c.content_type, c.title, c.body, c.body_plain,
+                 c.author_id, c.parent_id, c.status, c.created_date, c.updated_date
+        ORDER BY c.created_date DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- 统计活跃帖子数量 -->
+    <select id="countActivePosts" resultType="int">
+        SELECT COUNT(*)
+        FROM contents
+        WHERE content_type = 'post' AND status = 'active'
+    </select>
+
+    <!-- 根据作者查询帖子 -->
+    <select id="findPostsByAuthor" resultMap="ContentResultMap">
+        SELECT <include refid="BaseColumns"/>
+        FROM contents
+        WHERE author_id = #{authorId} AND content_type = 'post' AND status = 'active'
+        ORDER BY created_date DESC
+    </select>
+
+    <!-- 搜索帖子 -->
+    <select id="searchPosts" resultMap="ContentResultMap">
+        SELECT
+            c.content_id,
+            c.content_type,
+            c.title,
+            c.body,
+            c.body_plain,
+            c.author_id,
+            c.parent_id,
+            c.status,
+            c.created_date,
+            c.updated_date,
+            COALESCE(MAX(CASE WHEN md.metric_name = 'view_count' THEN cm.metric_value END), 0) as view_count,
+            COALESCE(MAX(CASE WHEN md.metric_name = 'like_count' THEN cm.metric_value END), 0) as like_count,
+            COALESCE(MAX(CASE WHEN md.metric_name = 'reply_count' THEN cm.metric_value END), 0) as reply_count
+        FROM contents c
+                 LEFT JOIN content_metrics cm ON c.content_id = cm.content_id
+                 LEFT JOIN metric_definitions md ON cm.metric_id = md.metric_id
+        WHERE c.content_type = 'post'
+          AND c.status = 'active'
+          AND (c.title ILIKE CONCAT('%', #{keyword}, '%')
+            OR c.body_plain ILIKE CONCAT('%', #{keyword}, '%'))
+        GROUP BY c.content_id, c.content_type, c.title, c.body, c.body_plain,
+                 c.author_id, c.parent_id, c.status, c.created_date, c.updated_date
+        ORDER BY c.created_date DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- 统计搜索结果数量 -->
+    <select id="countSearchPosts" resultType="int">
+        SELECT COUNT(*)
+        FROM contents
+        WHERE content_type = 'post'
+          AND status = 'active'
+          AND (
+            title ILIKE CONCAT('%', #{keyword}, '%')
+                OR body_plain ILIKE CONCAT('%', #{keyword}, '%')
+            )
+    </select>
+
+    <!-- 查询子内容 -->
+    <!-- 查询子内容（回复）- 带分页和统计数据 -->
+    <select id="findChildren" resultMap="ContentResultMap">
+        SELECT
+            c.content_id,
+            c.content_type,
+            c.title,
+            c.body,
+            c.body_plain,
+            c.author_id,
+            c.parent_id,
+            c.status,
+            c.created_date,
+            c.updated_date,
+            COALESCE(MAX(CASE WHEN md.metric_name = 'like_count' THEN cm.metric_value END), 0) as like_count
+        FROM contents c
+                 LEFT JOIN content_metrics cm ON c.content_id = cm.content_id
+                 LEFT JOIN metric_definitions md ON cm.metric_id = md.metric_id
+        WHERE c.parent_id = #{parentId}
+          AND c.status = 'active'
+        GROUP BY c.content_id, c.content_type, c.title, c.body, c.body_plain,
+                 c.author_id, c.parent_id, c.status, c.created_date, c.updated_date
+        ORDER BY c.created_date ASC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+    <!-- 统计子内容数量 -->
+    <select id="countChildren" resultType="int">
+        SELECT COUNT(*)
+        FROM contents
+        WHERE parent_id = #{parentId} AND status = 'active'
+    </select>
+
+    <!-- 根据作者ID获取帖子列表（分页） -->
+    <select id="findByAuthorId" resultMap="ContentResultMap">
+        SELECT
+            content_id,
+            title,
+            body,
+            author_id,
+            created_date,
+            updated_date,
+            status
+        FROM contents
+        WHERE author_id = #{authorId}
+        ORDER BY created_date DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- 统计作者的帖子总数 -->
+    <select id="countByAuthorId" resultType="int">
+        SELECT COUNT(*)
+        FROM contents
+        WHERE author_id = #{authorId}
+    </select>
+
+
+    <!-- 查询用户的活跃帖子（未删除） -->
+    <select id="selectActiveByAuthorId" resultType="ForumContent">
+        SELECT
+            c.content_id,
+            c.content_type,
+            c.title,
+            c.body,
+            c.body_plain,
+            c.author_id,
+            c.parent_id,
+            c.status,
+            c.created_date,
+            c.updated_date,
+            COALESCE(MAX(CASE WHEN md.metric_name = 'view_count' THEN cm.metric_value END), 0) as view_count,
+            COALESCE(MAX(CASE WHEN md.metric_name = 'like_count' THEN cm.metric_value END), 0) as like_count,
+            COALESCE(MAX(CASE WHEN md.metric_name = 'reply_count' THEN cm.metric_value END), 0) as reply_count
+        FROM contents c
+                 LEFT JOIN content_metrics cm ON c.content_id = cm.content_id
+                 LEFT JOIN metric_definitions md ON cm.metric_id = md.metric_id
+        WHERE c.author_id = #{authorId}
+          AND c.content_type = 'post'
+          AND c.status = 'active'
+        GROUP BY c.content_id, c.content_type, c.title, c.body, c.body_plain,
+                 c.author_id, c.parent_id, c.status, c.created_date, c.updated_date
+        ORDER BY c.created_date DESC
+        LIMIT #{size} OFFSET #{offset}
+    </select>
+
+    <!-- 统计用户的活跃帖子数（未删除） -->
+    <select id="countActiveByAuthorId" resultType="int">
+        SELECT COUNT(*)
+        FROM contents
+        WHERE author_id = #{authorId}
+          AND content_type = 'post'
+          AND status = 'active'
+    </select>
+</mapper>
