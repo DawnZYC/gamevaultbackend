@@ -1,3 +1,35 @@
+WARNING: A terminally deprecated method in sun.misc.Unsafe has been called
+WARNING: sun.misc.Unsafe::staticFieldBase has been called by com.google.inject.internal.aop.HiddenClassDefiner (file:/opt/homebrew/Cellar/maven/3.9.11/libexec/lib/guice-5.1.0-classes.jar)
+WARNING: Please consider reporting this to the maintainers of class com.google.inject.internal.aop.HiddenClassDefiner
+WARNING: sun.misc.Unsafe::staticFieldBase will be removed in a future release
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] -------------------< com.sg.nusiss:gamevaultbackend >-------------------
+[INFO] Building gamevaultbackend 0.0.1-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] >>> spring-boot:3.5.6:run (default-cli) > test-compile @ gamevaultbackend >>>
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ gamevaultbackend ---
+[INFO] Copying 1 resource from src/main/resources to target/classes
+[INFO] Copying 11 resources from src/main/resources to target/classes
+[INFO] 
+[INFO] --- compiler:3.14.0:compile (default-compile) @ gamevaultbackend ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ gamevaultbackend ---
+[INFO] skip non existing resourceDirectory /Users/zyc/IdeaProjects/gamevaultbackend/src/test/resources
+[INFO] 
+[INFO] --- compiler:3.14.0:testCompile (default-testCompile) @ gamevaultbackend ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 1 source file with javac [debug parameters release 17] to target/test-classes
+[INFO] 
+[INFO] <<< spring-boot:3.5.6:run (default-cli) < test-compile @ gamevaultbackend <<<
+[INFO] 
+[INFO] 
+[INFO] --- spring-boot:3.5.6:run (default-cli) @ gamevaultbackend ---
+[INFO] Attaching agents: []
 
   .   ____          _            __ _ _
  /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
@@ -8,25 +40,24 @@
 
  :: Spring Boot ::                (v3.5.6)
 
-2025-09-30T17:22:16.485+08:00  INFO 15724 --- [           main] c.s.n.g.GamevaultbackendApplication      : Starting GamevaultbackendApplication v0.0.1-SNAPSHOT using Java 24.0.2 with PID 15724 (/Users/zyc/IdeaProjects/gamevaultbackend/target/gamevaultbackend-0.0.1-SNAPSHOT.jar started by zyc in /Users/zyc/IdeaProjects/gamevaultbackend)
-2025-09-30T17:22:16.486+08:00  INFO 15724 --- [           main] c.s.n.g.GamevaultbackendApplication      : No active profile set, falling back to 1 default profile: "default"
-2025-09-30T17:22:16.887+08:00  INFO 15724 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
-2025-09-30T17:22:16.907+08:00  INFO 15724 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 17 ms. Found 5 JPA repository interfaces.
-2025-09-30T17:22:16.955+08:00  WARN 15724 --- [           main] o.m.s.mapper.ClassPathMapperScanner      : No MyBatis mapper was found in '[com.sg.nusiss.gamevaultbackend]' package. Please check your configuration.
-2025-09-30T17:22:17.111+08:00  INFO 15724 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
-2025-09-30T17:22:17.118+08:00  INFO 15724 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
-2025-09-30T17:22:17.118+08:00  INFO 15724 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.46]
-2025-09-30T17:22:17.127+08:00  INFO 15724 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
-2025-09-30T17:22:17.128+08:00  INFO 15724 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 626 ms
-2025-09-30T17:22:17.193+08:00  INFO 15724 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
-2025-09-30T17:22:17.219+08:00  INFO 15724 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.29.Final
-2025-09-30T17:22:17.237+08:00  INFO 15724 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
-2025-09-30T17:22:17.352+08:00  INFO 15724 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
-2025-09-30T17:22:17.363+08:00  INFO 15724 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
-2025-09-30T17:22:17.455+08:00  INFO 15724 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@70d5d96b
-2025-09-30T17:22:17.455+08:00  INFO 15724 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
-2025-09-30T17:22:17.472+08:00  WARN 15724 --- [           main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
-2025-09-30T17:22:17.480+08:00  INFO 15724 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+2025-10-10T16:07:17.247+08:00  INFO 74419 --- [           main] c.s.n.g.GamevaultbackendApplication      : Starting GamevaultbackendApplication using Java 25 with PID 74419 (/Users/zyc/IdeaProjects/gamevaultbackend/target/classes started by zyc in /Users/zyc/IdeaProjects/gamevaultbackend)
+2025-10-10T16:07:17.248+08:00  INFO 74419 --- [           main] c.s.n.g.GamevaultbackendApplication      : No active profile set, falling back to 1 default profile: "default"
+2025-10-10T16:07:17.469+08:00  INFO 74419 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2025-10-10T16:07:17.487+08:00  INFO 74419 --- [           main] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 15 ms. Found 4 JPA repository interfaces.
+2025-10-10T16:07:17.669+08:00  INFO 74419 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8080 (http)
+2025-10-10T16:07:17.676+08:00  INFO 74419 --- [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2025-10-10T16:07:17.676+08:00  INFO 74419 --- [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.46]
+2025-10-10T16:07:17.695+08:00  INFO 74419 --- [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2025-10-10T16:07:17.695+08:00  INFO 74419 --- [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 432 ms
+2025-10-10T16:07:17.748+08:00  INFO 74419 --- [           main] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2025-10-10T16:07:17.764+08:00  INFO 74419 --- [           main] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.29.Final
+2025-10-10T16:07:17.772+08:00  INFO 74419 --- [           main] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2025-10-10T16:07:17.866+08:00  INFO 74419 --- [           main] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2025-10-10T16:07:17.875+08:00  INFO 74419 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2025-10-10T16:07:17.960+08:00  INFO 74419 --- [           main] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection org.postgresql.jdbc.PgConnection@69d2e517
+2025-10-10T16:07:17.960+08:00  INFO 74419 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2025-10-10T16:07:17.975+08:00  WARN 74419 --- [           main] org.hibernate.orm.deprecation            : HHH90000025: PostgreSQLDialect does not need to be specified explicitly using 'hibernate.dialect' (remove the property setting and it will be selected by default)
+2025-10-10T16:07:17.982+08:00  INFO 74419 --- [           main] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
 	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
 	Database driver: undefined/unknown
 	Database version: 16.10
@@ -34,382 +65,41 @@
 	Isolation level: undefined/unknown
 	Minimum pool size: undefined/unknown
 	Maximum pool size: undefined/unknown
-2025-09-30T17:22:17.852+08:00  INFO 15724 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
-2025-09-30T17:22:17.884+08:00  INFO 15724 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
-2025-09-30T17:22:18.042+08:00  INFO 15724 --- [           main] o.s.d.j.r.query.QueryEnhancerFactory     : Hibernate is in classpath; If applicable, HQL parser will be used.
-2025-09-30T17:22:18.751+08:00  WARN 15724 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
-2025-09-30T17:22:18.762+08:00  INFO 15724 --- [           main] r$InitializeUserDetailsManagerConfigurer : Global AuthenticationManager configured with UserDetailsService bean with name appUserDetailsService
-2025-09-30T17:22:18.956+08:00  INFO 15724 --- [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8080 (http) with context path '/'
-2025-09-30T17:22:18.959+08:00  INFO 15724 --- [           main] c.s.n.g.GamevaultbackendApplication      : Started GamevaultbackendApplication in 2.621 seconds (process running for 2.797)
-2025-09-30T17:22:18.960+08:00  INFO 15724 --- [           main] c.s.n.g.config.DatabaseInitializer       : 开始初始化数据库表结构...
-2025-09-30T17:22:18.985+08:00  WARN 15724 --- [           main] c.s.n.g.config.DatabaseInitializer       : 执行SQL失败: CREATE OR REPLACE FUNCTION increment_metric(p_content_id INTEGER, p_metric_name VARCHAR)
-RETURNS void AS $$
-BEGIN
-INSERT INTO content_metrics (content_id, metric_id, metric_value)
-VALUES (
-           p_content_id,
-           (SELECT metric_id FROM metric_definitions WHERE metric_name = p_metric_name),
-           1
-       )
-    ON CONFLICT (content_id, metric_id)
-    DO UPDATE SET
-    metric_value = content_metrics.metric_value + 1,
-               updated_date = CURRENT_TIMESTAMP;, 错误: StatementCallback; bad SQL grammar [CREATE OR REPLACE FUNCTION increment_metric(p_content_id INTEGER, p_metric_name VARCHAR)
-RETURNS void AS $$
-BEGIN
-INSERT INTO content_metrics (content_id, metric_id, metric_value)
-VALUES (
-           p_content_id,
-           (SELECT metric_id FROM metric_definitions WHERE metric_name = p_metric_name),
-           1
-       )
-    ON CONFLICT (content_id, metric_id)
-    DO UPDATE SET
-    metric_value = content_metrics.metric_value + 1,
-               updated_date = CURRENT_TIMESTAMP;]
-2025-09-30T17:22:18.986+08:00  WARN 15724 --- [           main] c.s.n.g.config.DatabaseInitializer       : 执行SQL失败: $$ LANGUAGE plpgsql;, 错误: StatementCallback; bad SQL grammar [$$ LANGUAGE plpgsql;]
-2025-09-30T17:22:18.986+08:00  WARN 15724 --- [           main] c.s.n.g.config.DatabaseInitializer       : 执行SQL失败: CREATE OR REPLACE FUNCTION set_content_attribute(
-    p_content_id INTEGER,
-    p_attr_name VARCHAR,
-    p_attr_value TEXT
-)
-RETURNS void AS $$
-BEGIN
-INSERT INTO content_attributes (content_id, attr_id, attr_value)
-VALUES (
-           p_content_id,
-           (SELECT attr_id FROM attribute_definitions WHERE attr_name = p_attr_name),
-           p_attr_value
-       )
-    ON CONFLICT (content_id, attr_id)
-    DO UPDATE SET
-    attr_value = p_attr_value,
-               created_date = CURRENT_TIMESTAMP;, 错误: StatementCallback; bad SQL grammar [CREATE OR REPLACE FUNCTION set_content_attribute(
-    p_content_id INTEGER,
-    p_attr_name VARCHAR,
-    p_attr_value TEXT
-)
-RETURNS void AS $$
-BEGIN
-INSERT INTO content_attributes (content_id, attr_id, attr_value)
-VALUES (
-           p_content_id,
-           (SELECT attr_id FROM attribute_definitions WHERE attr_name = p_attr_name),
-           p_attr_value
-       )
-    ON CONFLICT (content_id, attr_id)
-    DO UPDATE SET
-    attr_value = p_attr_value,
-               created_date = CURRENT_TIMESTAMP;]
-2025-09-30T17:22:18.987+08:00  WARN 15724 --- [           main] c.s.n.g.config.DatabaseInitializer       : 执行SQL失败: $$ LANGUAGE plpgsql;, 错误: StatementCallback; bad SQL grammar [$$ LANGUAGE plpgsql;]
-2025-09-30T17:22:18.987+08:00  INFO 15724 --- [           main] c.s.n.g.config.DatabaseInitializer       : 论坛数据库表结构初始化完成
-2025-09-30T17:22:29.863+08:00  INFO 15724 --- [nio-8080-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
-2025-09-30T17:22:29.863+08:00  INFO 15724 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
-2025-09-30T17:22:29.863+08:00  INFO 15724 --- [nio-8080-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
-2025-09-30T17:22:29.882+08:00  INFO 15724 --- [nio-8080-exec-1] c.s.n.g.controller.forum.PostController  : 获取帖子列表 - 页码: 0, 每页大小: 2
-2025-09-30T17:22:29.886+08:00  INFO 15724 --- [nio-8080-exec-1] c.s.n.g.service.forum.PostService        : 获取帖子列表 - 页码: 0, 每页大小: 2
-Hibernate: select c1_0.content_id,c1_0.author_id,c1_0.body,c1_0.body_plain,c1_0.content_type,c1_0.created_date,c1_0.parent_id,c1_0.status,c1_0.title,c1_0.updated_date from contents c1_0 where c1_0.content_type='post' and c1_0.status='active' order by c1_0.created_date desc fetch first ? rows only
-Hibernate: select count(c1_0.content_id) from contents c1_0 where c1_0.content_type='post' and c1_0.status='active'
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'view_count'
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'like_count'
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-2025-09-30T17:23:04.388+08:00  INFO 15724 --- [nio-8080-exec-6] c.s.n.g.controller.forum.PostController  : 获取帖子列表 - 页码: 0, 每页大小: 20
-2025-09-30T17:23:04.390+08:00  INFO 15724 --- [nio-8080-exec-6] c.s.n.g.service.forum.PostService        : 获取帖子列表 - 页码: 0, 每页大小: 20
-Hibernate: select c1_0.content_id,c1_0.author_id,c1_0.body,c1_0.body_plain,c1_0.content_type,c1_0.created_date,c1_0.parent_id,c1_0.status,c1_0.title,c1_0.updated_date from contents c1_0 where c1_0.content_type='post' and c1_0.status='active' order by c1_0.created_date desc fetch first ? rows only
-Hibernate: select count(c1_0.content_id) from contents c1_0 where c1_0.content_type='post' and c1_0.status='active'
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'view_count'
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'like_count'
-2025-09-30T17:23:04.408+08:00  INFO 15724 --- [nio-8080-exec-6] c.s.n.g.controller.forum.PostController  : 获取帖子列表 - 页码: 0, 每页大小: 20
-2025-09-30T17:23:04.408+08:00  INFO 15724 --- [nio-8080-exec-6] c.s.n.g.service.forum.PostService        : 获取帖子列表 - 页码: 0, 每页大小: 20
-Hibernate: select c1_0.content_id,c1_0.author_id,c1_0.body,c1_0.body_plain,c1_0.content_type,c1_0.created_date,c1_0.parent_id,c1_0.status,c1_0.title,c1_0.updated_date from contents c1_0 where c1_0.content_type='post' and c1_0.status='active' order by c1_0.created_date desc fetch first ? rows only
-Hibernate: select count(c1_0.content_id) from contents c1_0 where c1_0.content_type='post' and c1_0.status='active'
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'view_count'
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'like_count'
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-2025-09-30T17:23:14.127+08:00  INFO 15724 --- [nio-8080-exec-2] c.s.n.g.controller.forum.PostController  : 获取帖子列表 - 页码: 0, 每页大小: 20
-2025-09-30T17:23:14.128+08:00  INFO 15724 --- [nio-8080-exec-2] c.s.n.g.service.forum.PostService        : 获取帖子列表 - 页码: 0, 每页大小: 20
-Hibernate: select c1_0.content_id,c1_0.author_id,c1_0.body,c1_0.body_plain,c1_0.content_type,c1_0.created_date,c1_0.parent_id,c1_0.status,c1_0.title,c1_0.updated_date from contents c1_0 where c1_0.content_type='post' and c1_0.status='active' order by c1_0.created_date desc fetch first ? rows only
-Hibernate: select count(c1_0.content_id) from contents c1_0 where c1_0.content_type='post' and c1_0.status='active'
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'view_count'
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'like_count'
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-2025-09-30T17:23:26.718+08:00  INFO 15724 --- [nio-8080-exec-6] c.s.n.g.controller.forum.PostController  : 获取帖子列表 - 页码: 0, 每页大小: 20
-2025-09-30T17:23:26.719+08:00  INFO 15724 --- [nio-8080-exec-6] c.s.n.g.service.forum.PostService        : 获取帖子列表 - 页码: 0, 每页大小: 20
-Hibernate: select c1_0.content_id,c1_0.author_id,c1_0.body,c1_0.body_plain,c1_0.content_type,c1_0.created_date,c1_0.parent_id,c1_0.status,c1_0.title,c1_0.updated_date from contents c1_0 where c1_0.content_type='post' and c1_0.status='active' order by c1_0.created_date desc fetch first ? rows only
-Hibernate: select count(c1_0.content_id) from contents c1_0 where c1_0.content_type='post' and c1_0.status='active'
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'view_count'
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'like_count'
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-2025-09-30T17:23:38.476+08:00  INFO 15724 --- [nio-8080-exec-2] c.s.n.g.controller.forum.PostController  : 获取帖子列表 - 页码: 0, 每页大小: 20
-2025-09-30T17:23:38.478+08:00  INFO 15724 --- [nio-8080-exec-2] c.s.n.g.service.forum.PostService        : 获取帖子列表 - 页码: 0, 每页大小: 20
-Hibernate: select c1_0.content_id,c1_0.author_id,c1_0.body,c1_0.body_plain,c1_0.content_type,c1_0.created_date,c1_0.parent_id,c1_0.status,c1_0.title,c1_0.updated_date from contents c1_0 where c1_0.content_type='post' and c1_0.status='active' order by c1_0.created_date desc fetch first ? rows only
-Hibernate: select count(c1_0.content_id) from contents c1_0 where c1_0.content_type='post' and c1_0.status='active'
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'view_count'
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'like_count'
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-2025-09-30T17:24:49.107+08:00  INFO 15724 --- [nio-8080-exec-8] c.s.n.g.controller.forum.PostController  : 获取帖子列表 - 页码: 0, 每页大小: 20
-2025-09-30T17:24:49.111+08:00  INFO 15724 --- [nio-8080-exec-8] c.s.n.g.service.forum.PostService        : 获取帖子列表 - 页码: 0, 每页大小: 20
-Hibernate: select c1_0.content_id,c1_0.author_id,c1_0.body,c1_0.body_plain,c1_0.content_type,c1_0.created_date,c1_0.parent_id,c1_0.status,c1_0.title,c1_0.updated_date from contents c1_0 where c1_0.content_type='post' and c1_0.status='active' order by c1_0.created_date desc fetch first ? rows only
-Hibernate: select count(c1_0.content_id) from contents c1_0 where c1_0.content_type='post' and c1_0.status='active'
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'view_count'
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'like_count'
-2025-09-30T17:25:21.769+08:00  INFO 15724 --- [nio-8080-exec-9] c.s.n.g.controller.forum.PostController  : 获取帖子列表 - 页码: 0, 每页大小: 20
-2025-09-30T17:25:21.770+08:00  INFO 15724 --- [nio-8080-exec-9] c.s.n.g.service.forum.PostService        : 获取帖子列表 - 页码: 0, 每页大小: 20
-Hibernate: select c1_0.content_id,c1_0.author_id,c1_0.body,c1_0.body_plain,c1_0.content_type,c1_0.created_date,c1_0.parent_id,c1_0.status,c1_0.title,c1_0.updated_date from contents c1_0 where c1_0.content_type='post' and c1_0.status='active' order by c1_0.created_date desc fetch first ? rows only
-Hibernate: select count(c1_0.content_id) from contents c1_0 where c1_0.content_type='post' and c1_0.status='active'
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'view_count'
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'like_count'
-2025-09-30T17:25:36.234+08:00  INFO 15724 --- [nio-8080-exec-1] c.s.n.g.controller.forum.PostController  : 获取帖子列表 - 页码: 0, 每页大小: 20
-2025-09-30T17:25:36.236+08:00  INFO 15724 --- [nio-8080-exec-1] c.s.n.g.service.forum.PostService        : 获取帖子列表 - 页码: 0, 每页大小: 20
-Hibernate: select c1_0.content_id,c1_0.author_id,c1_0.body,c1_0.body_plain,c1_0.content_type,c1_0.created_date,c1_0.parent_id,c1_0.status,c1_0.title,c1_0.updated_date from contents c1_0 where c1_0.content_type='post' and c1_0.status='active' order by c1_0.created_date desc fetch first ? rows only
-Hibernate: select count(c1_0.content_id) from contents c1_0 where c1_0.content_type='post' and c1_0.status='active'
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'view_count'
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'like_count'
-2025-09-30T17:25:37.434+08:00  INFO 15724 --- [nio-8080-exec-2] c.s.n.g.controller.forum.PostController  : 获取帖子列表 - 页码: 0, 每页大小: 20
-2025-09-30T17:25:37.436+08:00  INFO 15724 --- [nio-8080-exec-2] c.s.n.g.service.forum.PostService        : 获取帖子列表 - 页码: 0, 每页大小: 20
-Hibernate: select c1_0.content_id,c1_0.author_id,c1_0.body,c1_0.body_plain,c1_0.content_type,c1_0.created_date,c1_0.parent_id,c1_0.status,c1_0.title,c1_0.updated_date from contents c1_0 where c1_0.content_type='post' and c1_0.status='active' order by c1_0.created_date desc fetch first ? rows only
-Hibernate: select count(c1_0.content_id) from contents c1_0 where c1_0.content_type='post' and c1_0.status='active'
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'view_count'
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'like_count'
-2025-09-30T17:26:30.043+08:00  INFO 15724 --- [nio-8080-exec-3] c.s.n.g.controller.forum.PostController  : 获取帖子列表 - 页码: 0, 每页大小: 20
-2025-09-30T17:26:30.044+08:00  INFO 15724 --- [nio-8080-exec-3] c.s.n.g.service.forum.PostService        : 获取帖子列表 - 页码: 0, 每页大小: 20
-Hibernate: select c1_0.content_id,c1_0.author_id,c1_0.body,c1_0.body_plain,c1_0.content_type,c1_0.created_date,c1_0.parent_id,c1_0.status,c1_0.title,c1_0.updated_date from contents c1_0 where c1_0.content_type='post' and c1_0.status='active' order by c1_0.created_date desc fetch first ? rows only
-Hibernate: select count(c1_0.content_id) from contents c1_0 where c1_0.content_type='post' and c1_0.status='active'
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'view_count'
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'like_count'
-2025-09-30T17:26:51.456+08:00  INFO 15724 --- [nio-8080-exec-5] c.s.n.g.controller.forum.PostController  : 获取帖子列表 - 页码: 0, 每页大小: 20
-2025-09-30T17:26:51.457+08:00  INFO 15724 --- [nio-8080-exec-5] c.s.n.g.service.forum.PostService        : 获取帖子列表 - 页码: 0, 每页大小: 20
-Hibernate: select c1_0.content_id,c1_0.author_id,c1_0.body,c1_0.body_plain,c1_0.content_type,c1_0.created_date,c1_0.parent_id,c1_0.status,c1_0.title,c1_0.updated_date from contents c1_0 where c1_0.content_type='post' and c1_0.status='active' order by c1_0.created_date desc fetch first ? rows only
-Hibernate: select count(c1_0.content_id) from contents c1_0 where c1_0.content_type='post' and c1_0.status='active'
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'view_count'
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'like_count'
-2025-09-30T17:27:42.624+08:00  INFO 15724 --- [nio-8080-exec-4] c.s.n.g.controller.forum.PostController  : 获取帖子列表 - 页码: 0, 每页大小: 20
-2025-09-30T17:27:42.626+08:00  INFO 15724 --- [nio-8080-exec-4] c.s.n.g.service.forum.PostService        : 获取帖子列表 - 页码: 0, 每页大小: 20
-Hibernate: select c1_0.content_id,c1_0.author_id,c1_0.body,c1_0.body_plain,c1_0.content_type,c1_0.created_date,c1_0.parent_id,c1_0.status,c1_0.title,c1_0.updated_date from contents c1_0 where c1_0.content_type='post' and c1_0.status='active' order by c1_0.created_date desc fetch first ? rows only
-Hibernate: select count(c1_0.content_id) from contents c1_0 where c1_0.content_type='post' and c1_0.status='active'
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'view_count'
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'like_count'
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.username=?
-Hibernate: update users set email=?,last_login_time=?,password=?,create_time=?,username=? where user_id=?
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.user_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.user_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select oi1_0.order_item_id,oi1_0.discount_price,oi1_0.game_id,oi1_0.order_date,oi1_0.order_id,oi1_0.order_status,oi1_0.unit_price,oi1_0.user_id from order_items oi1_0 where oi1_0.user_id=? order by oi1_0.order_date desc
-Hibernate: select oi1_0.order_item_id,oi1_0.discount_price,oi1_0.game_id,oi1_0.order_date,oi1_0.order_id,oi1_0.order_status,oi1_0.unit_price,oi1_0.user_id from order_items oi1_0 where oi1_0.user_id=? order by oi1_0.order_date desc
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.order_item_id=?
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.order_item_id=?
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.order_item_id=?
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.order_item_id=?
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.order_item_id=?
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.order_item_id=?
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.order_item_id=?
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.order_item_id=?
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.order_item_id=?
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.order_item_id=?
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.order_item_id=?
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.order_item_id=?
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.order_item_id=?
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.order_item_id=?
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.order_item_id=?
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.order_item_id=?
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.order_item_id=?
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.order_item_id=?
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.order_item_id=?
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.order_item_id=?
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.order_item_id=?
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.order_item_id=?
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.order_item_id=?
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.order_item_id=?
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.order_item_id=?
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.order_item_id=?
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.order_item_id=?
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.order_item_id=?
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.order_item_id=?
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.order_item_id=?
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.user_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: select pgac1_0.activation_id,pgac1_0.activation_code,pgac1_0.game_id,pgac1_0.order_item_id,pgac1_0.user_id from purchased_game_activation_code pgac1_0 where pgac1_0.user_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-Hibernate: select g1_0.game_id,g1_0.price,g1_0.title from games g1_0 where g1_0.game_id=?
-2025-09-30T17:28:33.346+08:00  INFO 15724 --- [nio-8080-exec-9] c.s.n.g.controller.forum.PostController  : 获取帖子列表 - 页码: 0, 每页大小: 20
-2025-09-30T17:28:33.348+08:00  INFO 15724 --- [nio-8080-exec-9] c.s.n.g.service.forum.PostService        : 获取帖子列表 - 页码: 0, 每页大小: 20
-Hibernate: select c1_0.content_id,c1_0.author_id,c1_0.body,c1_0.body_plain,c1_0.content_type,c1_0.created_date,c1_0.parent_id,c1_0.status,c1_0.title,c1_0.updated_date from contents c1_0 where c1_0.content_type='post' and c1_0.status='active' order by c1_0.created_date desc fetch first ? rows only
-Hibernate: select count(c1_0.content_id) from contents c1_0 where c1_0.content_type='post' and c1_0.status='active'
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'view_count'
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'like_count'
-2025-09-30T17:28:33.360+08:00  INFO 15724 --- [nio-8080-exec-1] c.s.n.g.controller.forum.PostController  : 获取帖子列表 - 页码: 0, 每页大小: 20
-2025-09-30T17:28:33.360+08:00  INFO 15724 --- [nio-8080-exec-1] c.s.n.g.service.forum.PostService        : 获取帖子列表 - 页码: 0, 每页大小: 20
-Hibernate: select c1_0.content_id,c1_0.author_id,c1_0.body,c1_0.body_plain,c1_0.content_type,c1_0.created_date,c1_0.parent_id,c1_0.status,c1_0.title,c1_0.updated_date from contents c1_0 where c1_0.content_type='post' and c1_0.status='active' order by c1_0.created_date desc fetch first ? rows only
-Hibernate: select count(c1_0.content_id) from contents c1_0 where c1_0.content_type='post' and c1_0.status='active'
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'view_count'
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'like_count'
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-2025-09-30T17:29:04.186+08:00  INFO 15724 --- [io-8080-exec-10] c.s.n.g.controller.forum.PostController  : 创建帖子 - 用户ID: 1, 标题: rrrrrrrr
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-2025-09-30T17:29:04.191+08:00  INFO 15724 --- [io-8080-exec-10] c.s.n.g.service.forum.PostService        : 创建新帖子 - 标题: rrrrrrrr, 作者ID: 1
-Hibernate: insert into contents (author_id,body,body_plain,content_type,created_date,parent_id,status,title,updated_date) values (?,?,?,?,?,?,?,?,?)
-2025-09-30T17:29:04.207+08:00  INFO 15724 --- [io-8080-exec-10] c.s.n.g.controller.forum.PostController  : 帖子创建成功 - 帖子ID: 2
-2025-09-30T17:29:04.795+08:00  INFO 15724 --- [nio-8080-exec-6] c.s.n.g.controller.forum.PostController  : 获取帖子列表 - 页码: 0, 每页大小: 20
-2025-09-30T17:29:04.796+08:00  INFO 15724 --- [nio-8080-exec-6] c.s.n.g.service.forum.PostService        : 获取帖子列表 - 页码: 0, 每页大小: 20
-Hibernate: select c1_0.content_id,c1_0.author_id,c1_0.body,c1_0.body_plain,c1_0.content_type,c1_0.created_date,c1_0.parent_id,c1_0.status,c1_0.title,c1_0.updated_date from contents c1_0 where c1_0.content_type='post' and c1_0.status='active' order by c1_0.created_date desc fetch first ? rows only
-Hibernate: select count(c1_0.content_id) from contents c1_0 where c1_0.content_type='post' and c1_0.status='active'
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'view_count'
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'like_count'
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'view_count'
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'like_count'
-2025-09-30T17:29:04.808+08:00  INFO 15724 --- [nio-8080-exec-8] c.s.n.g.controller.forum.PostController  : 获取帖子列表 - 页码: 0, 每页大小: 20
-2025-09-30T17:29:04.808+08:00  INFO 15724 --- [nio-8080-exec-8] c.s.n.g.service.forum.PostService        : 获取帖子列表 - 页码: 0, 每页大小: 20
-Hibernate: select c1_0.content_id,c1_0.author_id,c1_0.body,c1_0.body_plain,c1_0.content_type,c1_0.created_date,c1_0.parent_id,c1_0.status,c1_0.title,c1_0.updated_date from contents c1_0 where c1_0.content_type='post' and c1_0.status='active' order by c1_0.created_date desc fetch first ? rows only
-Hibernate: select count(c1_0.content_id) from contents c1_0 where c1_0.content_type='post' and c1_0.status='active'
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'view_count'
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'like_count'
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'view_count'
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'like_count'
-2025-09-30T17:30:09.822+08:00  INFO 15724 --- [nio-8080-exec-5] c.s.n.g.controller.forum.PostController  : 获取帖子列表 - 页码: 0, 每页大小: 20
-2025-09-30T17:30:09.823+08:00  INFO 15724 --- [nio-8080-exec-5] c.s.n.g.service.forum.PostService        : 获取帖子列表 - 页码: 0, 每页大小: 20
-Hibernate: select c1_0.content_id,c1_0.author_id,c1_0.body,c1_0.body_plain,c1_0.content_type,c1_0.created_date,c1_0.parent_id,c1_0.status,c1_0.title,c1_0.updated_date from contents c1_0 where c1_0.content_type='post' and c1_0.status='active' order by c1_0.created_date desc fetch first ? rows only
-Hibernate: select count(c1_0.content_id) from contents c1_0 where c1_0.content_type='post' and c1_0.status='active'
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'view_count'
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'like_count'
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'view_count'
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'like_count'
-2025-09-30T17:30:09.842+08:00  INFO 15724 --- [nio-8080-exec-4] c.s.n.g.controller.forum.PostController  : 获取帖子列表 - 页码: 0, 每页大小: 20
-2025-09-30T17:30:09.843+08:00  INFO 15724 --- [nio-8080-exec-4] c.s.n.g.service.forum.PostService        : 获取帖子列表 - 页码: 0, 每页大小: 20
-Hibernate: select c1_0.content_id,c1_0.author_id,c1_0.body,c1_0.body_plain,c1_0.content_type,c1_0.created_date,c1_0.parent_id,c1_0.status,c1_0.title,c1_0.updated_date from contents c1_0 where c1_0.content_type='post' and c1_0.status='active' order by c1_0.created_date desc fetch first ? rows only
-Hibernate: select count(c1_0.content_id) from contents c1_0 where c1_0.content_type='post' and c1_0.status='active'
-Hibernate: select u1_0.user_id,u1_0.email,u1_0.last_login_time,u1_0.password,u1_0.create_time,u1_0.username from users u1_0 where u1_0.user_id=?
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'view_count'
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'like_count'
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'view_count'
-Hibernate: SELECT COALESCE(cm.metric_value, 0) FROM content_metrics cm JOIN metric_definitions md ON cm.metric_id = md.metric_id WHERE cm.content_id = ? AND md.metric_name = 'like_count'
-2025-09-30T17:32:47.130+08:00  INFO 15724 --- [ionShutdownHook] o.s.b.w.e.tomcat.GracefulShutdown        : Commencing graceful shutdown. Waiting for active requests to complete
-2025-09-30T17:32:47.136+08:00  INFO 15724 --- [tomcat-shutdown] o.s.b.w.e.tomcat.GracefulShutdown        : Graceful shutdown complete
-2025-09-30T17:32:47.141+08:00  INFO 15724 --- [ionShutdownHook] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
-2025-09-30T17:32:47.144+08:00  INFO 15724 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
-2025-09-30T17:32:47.145+08:00  INFO 15724 --- [ionShutdownHook] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2025-10-10T16:07:18.249+08:00  INFO 74419 --- [           main] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2025-10-10T16:07:18.284+08:00  INFO 74419 --- [           main] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+Logging initialized using 'class org.apache.ibatis.logging.stdout.StdOutImpl' adapter.
+2025-10-10T16:07:18.541+08:00  WARN 74419 --- [           main] JpaBaseConfiguration$JpaWebConfiguration : spring.jpa.open-in-view is enabled by default. Therefore, database queries may be performed during view rendering. Explicitly configure spring.jpa.open-in-view to disable this warning
+2025-10-10T16:07:18.706+08:00  WARN 74419 --- [           main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Failed to start bean 'webServerStartStop'
+2025-10-10T16:07:18.707+08:00  INFO 74419 --- [           main] j.LocalContainerEntityManagerFactoryBean : Closing JPA EntityManagerFactory for persistence unit 'default'
+2025-10-10T16:07:18.708+08:00  INFO 74419 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown initiated...
+2025-10-10T16:07:18.709+08:00  INFO 74419 --- [           main] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Shutdown completed.
+2025-10-10T16:07:18.715+08:00  INFO 74419 --- [           main] .s.b.a.l.ConditionEvaluationReportLogger : 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-10-10T16:07:18.719+08:00 ERROR 74419 --- [           main] o.s.b.d.LoggingFailureAnalysisReporter   : 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Web server failed to start. Port 8080 was already in use.
+
+Action:
+
+Identify and stop the process that's listening on port 8080 or configure this application to listen on another port.
+
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  2.579 s
+[INFO] Finished at: 2025-10-10T16:07:18+08:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.springframework.boot:spring-boot-maven-plugin:3.5.6:run (default-cli) on project gamevaultbackend: Process terminated with exit code: 1 -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException

@@ -111,16 +111,15 @@ public class ForumContentLikeService {
     }
 
     /**
-     * 获取内容的点赞数（从 content_metrics 表查询）
+     * 获取内容的点赞数（直接从 user_content_relations 表统计）
      */
     public int getLikeCount(Long contentId) {
         if (contentId == null) {
             return 0;
         }
 
-        // 使用 MetricMapper 查询，需要通过 metric_name 查询
-        Integer count = metricMapper.getMetricValue(contentId, "like_count");
-        return count != null ? count : 0;
+        // 直接从关系表统计实际点赞数，避免依赖 content_metrics 表
+        return contentLikeMapper.countByContentAndType(contentId, ForumRelationType.LIKE);
     }
 
     /**

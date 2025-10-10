@@ -276,18 +276,14 @@ public class ForumPostService {
         int offset = page * size;
         logger.info("查询用户活跃帖子 - 用户ID: {}, 页码: {}, 每页: {}", authorId, page, size);
 
-        // 先查询帖子列表
+        // 查询帖子列表（SQL查询已经包含了统计数据：view_count, like_count, reply_count）
         List<ForumContent> posts = contentMapper.selectActiveByAuthorId(authorId, offset, size);
 
-        for (ForumContent post : posts) {
-            int likeCount = metricMapper.getMetricValue(post.getContentId(), "like_count");
-            int viewCount = metricMapper.getMetricValue(post.getContentId(), "view_count");
-            int replyCount = metricMapper.getMetricValue(post.getContentId(), "reply_count");
-
-            post.setLikeCount(likeCount);
-            post.setViewCount(viewCount);
-            post.setReplyCount(replyCount);
-        }
+        // 不需要再次获取统计数据，因为SQL查询已经通过JOIN获取了正确的数据
+        // SQL中使用了：
+        // - like_count: 从 user_content_relations 表实时统计
+        // - view_count: 从 content_metrics 表获取
+        // - reply_count: 从 content_metrics 表获取
 
         // 如果用户登录了，批量查询点赞状态
         if (currentUserId != null && !posts.isEmpty()) {

@@ -50,6 +50,7 @@ public class DatabaseInitializer implements CommandLineRunner {
             
             StringBuilder sql = new StringBuilder();
             String line;
+            boolean inFunctionBody = false;  // 标记是否在函数体内
             
             while ((line = reader.readLine()) != null) {
                 // 跳过注释和空行
@@ -59,15 +60,32 @@ public class DatabaseInitializer implements CommandLineRunner {
                 
                 sql.append(line).append("\n");
                 
-                // 如果遇到分号，执行SQL语句
-                if (line.trim().endsWith(";")) {
+                // 检查是否进入或退出函数体（使用 $$ 分隔符）
+                String trimmedLine = line.trim();
+                if (trimmedLine.contains("$$")) {
+                    // 统计当前行中 $$ 的出现次数
+                    int count = 0;
+                    int index = 0;
+                    while ((index = trimmedLine.indexOf("$$", index)) != -1) {
+                        count++;
+                        index += 2;
+                    }
+                    // 如果出现奇数次 $$，则切换函数体状态
+                    if (count % 2 == 1) {
+                        inFunctionBody = !inFunctionBody;
+                    }
+                }
+                
+                // 如果遇到分号且不在函数体内，执行SQL语句
+                if (trimmedLine.endsWith(";") && !inFunctionBody) {
                     String sqlStatement = sql.toString().trim();
                     if (!sqlStatement.isEmpty()) {
                         try {
                             jdbcTemplate.execute(sqlStatement);
-                            logger.debug("执行SQL: {}", sqlStatement);
+                            logger.debug("执行SQL成功");
                         } catch (Exception e) {
-                            logger.warn("执行SQL失败: {}, 错误: {}", sqlStatement, e.getMessage());
+                            // 只记录关键错误信息，不打印完整SQL
+                            logger.warn("执行SQL失败: {}", e.getMessage());
                         }
                     }
                     sql.setLength(0);

@@ -17,6 +17,7 @@ import com.sg.nusiss.gamevaultbackend.entity.forum.UserContentRelation;
 import com.sg.nusiss.gamevaultbackend.service.forum.ForumContentLikeService;
 import com.sg.nusiss.gamevaultbackend.service.forum.ForumPostService;
 import com.sg.nusiss.gamevaultbackend.service.forum.ForumUserService;
+import com.sg.nusiss.gamevaultbackend.service.forum.ViewTracker;
 
 import jakarta.validation.Valid;
 import java.time.LocalDateTime;
@@ -44,6 +45,9 @@ public class ForumPostController {
 
     @Autowired
     private ForumContentLikeService contentLikeService;
+    
+    @Autowired
+    private ViewTracker viewTracker;
 
     /**
      * 获取帖子列表（分页）
@@ -80,7 +84,21 @@ public class ForumPostController {
         Long userId = (Long) request.getAttribute("userId");
         try {
             ForumContent post = postService.getPostById(id,userId);
-            postService.incrementViewCount(id);
+            
+            // 只有登录用户的浏览才计入统计
+            if (userId != null) {
+                // 使用ViewTracker防止重复计数
+                boolean shouldIncrement = viewTracker.shouldIncrementView(userId, null, id);
+                
+                if (shouldIncrement) {
+                    postService.incrementViewCount(id);
+                    logger.debug("浏览量+1 - 帖子ID: {}, 用户ID: {}", id, userId);
+                } else {
+                    logger.debug("浏览量不变 - 用户{}在5分钟内重复访问帖子{}", userId, id);
+                }
+            } else {
+                logger.debug("未登录用户访问 - 不计入浏览量 - 帖子ID: {}", id);
+            }
 
             ForumUser author = getUserSafely(post.getAuthorId());
             PostResponseDTO dto = PostResponseDTO.fromContentAndUser(post, author);
@@ -680,6 +698,7 @@ public class ForumPostController {
                 dto.put("authorId", reply.getAuthorId());
                 dto.put("authorName", author != null ? author.getUsername() : null);
                 dto.put("authorNickname", author != null ? author.getNickname() : null);
+                dto.put("authorAvatarUrl", author != null ? author.getAvatarUrl() : null);
                 dto.put("likeCount", reply.getLikeCount() != null ? reply.getLikeCount() : 0);
                 dto.put("createdDate", reply.getCreatedDate());
                 dto.put("updatedDate", reply.getUpdatedDate());

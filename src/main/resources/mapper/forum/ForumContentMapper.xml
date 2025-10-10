@@ -41,7 +41,12 @@
             c.created_date,
             c.updated_date,
             COALESCE(MAX(CASE WHEN md.metric_name = 'view_count' THEN cm.metric_value END), 0) as view_count,
-            COALESCE(MAX(CASE WHEN md.metric_name = 'like_count' THEN cm.metric_value END), 0) as like_count,
+            COALESCE((
+                SELECT COUNT(*)
+                FROM user_content_relations ucr
+                WHERE ucr.content_id = c.content_id
+                  AND ucr.relation_type_id = (SELECT type_id FROM relationship_types WHERE type_name = 'like')
+            ), 0) as like_count,
             COALESCE(MAX(CASE WHEN md.metric_name = 'reply_count' THEN cm.metric_value END), 0) as reply_count
         FROM contents c
                  LEFT JOIN content_metrics cm ON c.content_id = cm.content_id
@@ -95,7 +100,12 @@
             c.created_date,
             c.updated_date,
             COALESCE(MAX(CASE WHEN md.metric_name = 'view_count' THEN cm.metric_value END), 0) as view_count,
-            COALESCE(MAX(CASE WHEN md.metric_name = 'like_count' THEN cm.metric_value END), 0) as like_count,
+            COALESCE((
+                SELECT COUNT(*)
+                FROM user_content_relations ucr
+                WHERE ucr.content_id = c.content_id
+                  AND ucr.relation_type_id = (SELECT type_id FROM relationship_types WHERE type_name = 'like')
+            ), 0) as like_count,
             COALESCE(MAX(CASE WHEN md.metric_name = 'reply_count' THEN cm.metric_value END), 0) as reply_count
         FROM contents c
                  LEFT JOIN content_metrics cm ON c.content_id = cm.content_id
@@ -136,7 +146,12 @@
             c.created_date,
             c.updated_date,
             COALESCE(MAX(CASE WHEN md.metric_name = 'view_count' THEN cm.metric_value END), 0) as view_count,
-            COALESCE(MAX(CASE WHEN md.metric_name = 'like_count' THEN cm.metric_value END), 0) as like_count,
+            COALESCE((
+                SELECT COUNT(*)
+                FROM user_content_relations ucr
+                WHERE ucr.content_id = c.content_id
+                  AND ucr.relation_type_id = (SELECT type_id FROM relationship_types WHERE type_name = 'like')
+            ), 0) as like_count,
             COALESCE(MAX(CASE WHEN md.metric_name = 'reply_count' THEN cm.metric_value END), 0) as reply_count
         FROM contents c
                  LEFT JOIN content_metrics cm ON c.content_id = cm.content_id
@@ -177,7 +192,12 @@
             c.status,
             c.created_date,
             c.updated_date,
-            COALESCE(MAX(CASE WHEN md.metric_name = 'like_count' THEN cm.metric_value END), 0) as like_count
+            COALESCE((
+                SELECT COUNT(*)
+                FROM user_content_relations ucr
+                WHERE ucr.content_id = c.content_id
+                  AND ucr.relation_type_id = (SELECT type_id FROM relationship_types WHERE type_name = 'like')
+            ), 0) as like_count
         FROM contents c
                  LEFT JOIN content_metrics cm ON c.content_id = cm.content_id
                  LEFT JOIN metric_definitions md ON cm.metric_id = md.metric_id
@@ -233,7 +253,12 @@
             c.created_date,
             c.updated_date,
             COALESCE(MAX(CASE WHEN md.metric_name = 'view_count' THEN cm.metric_value END), 0) as view_count,
-            COALESCE(MAX(CASE WHEN md.metric_name = 'like_count' THEN cm.metric_value END), 0) as like_count,
+            COALESCE((
+                SELECT COUNT(*)
+                FROM user_content_relations ucr
+                WHERE ucr.content_id = c.content_id
+                  AND ucr.relation_type_id = (SELECT type_id FROM relationship_types WHERE type_name = 'like')
+            ), 0) as like_count,
             COALESCE(MAX(CASE WHEN md.metric_name = 'reply_count' THEN cm.metric_value END), 0) as reply_count
         FROM contents c
                  LEFT JOIN content_metrics cm ON c.content_id = cm.content_id

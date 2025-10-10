@@ -20,6 +20,7 @@ public class PostResponseDTO {
     private Long authorId;
     private String authorName;
     private String authorNickname;
+    private String authorAvatar;
     private Integer viewCount;
     private Integer likeCount;
     private Integer replyCount;
@@ -53,6 +54,7 @@ public class PostResponseDTO {
         if (author != null) {
             dto.authorName = author.getUsername();
             dto.authorNickname = author.getNickname();
+            dto.authorAvatar = author.getAvatarUrl();
             dto.isLiked = content.getIsLikedByCurrentUser();
         }
         return dto;
@@ -84,6 +86,10 @@ public class PostResponseDTO {
 
     public String getAuthorNickname() {
         return authorNickname;
+    }
+
+    public String getAuthorAvatar() {
+        return authorAvatar;
     }
 
     public Integer getViewCount() {
@@ -134,6 +140,10 @@ public class PostResponseDTO {
         this.authorNickname = authorNickname;
     }
 
+    public void setAuthorAvatar(String authorAvatar) {
+        this.authorAvatar = authorAvatar;
+    }
+
     public void setViewCount(Integer viewCount) {
         this.viewCount = viewCount;
     }
@@ -167,6 +177,7 @@ public class PostResponseDTO {
                 "contentId=" + contentId +
                 ", title='" + title + '\'' +
                 ", authorName='" + authorName + '\'' +
+                ", authorAvatar='" + authorAvatar + '\'' +
                 ", viewCount=" + viewCount +
                 ", likeCount=" + likeCount +
                 ", replyCount=" + replyCount +
