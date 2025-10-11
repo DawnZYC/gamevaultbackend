@@ -41,3 +41,5 @@ mvnw.cmd
 
 docker/
 .DS_Store
+
+uploads/
