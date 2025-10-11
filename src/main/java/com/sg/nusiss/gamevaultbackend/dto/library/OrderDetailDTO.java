@@ -4,7 +4,7 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
 
-public class OrderDetailDto {
+public class OrderDetailDTO {
     public Long orderItemId;
     public Long orderId;
     public Long userId;

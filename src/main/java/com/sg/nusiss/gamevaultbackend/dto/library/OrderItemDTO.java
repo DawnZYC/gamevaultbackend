@@ -1,9 +1,12 @@
 package com.sg.nusiss.gamevaultbackend.dto.library;
 
+import lombok.Data;
+
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-public class OrderItemDto {
+@Data
+public class OrderItemDTO {
     public Long orderItemId;
     public Long orderId;
     public Long userId;
@@ -12,6 +15,10 @@ public class OrderItemDto {
     public BigDecimal discountPrice;
     public LocalDateTime orderDate;
     public String orderStatus;
+
+    public String activationCode;
+    public String gameTitle;
+    public String imageUrl;
 }
 
 
