@@ -40,6 +40,15 @@ public class CartController {
         return ResponseEntity.ok(cartService.addGame(userId, gameId, quantity));
     }
 
+    /** 🔄 更新购物车商品数量 */
+    @PutMapping("/items/{gameId}")
+    public ResponseEntity<CartDTO> updateQuantity(@AuthenticationPrincipal Jwt jwt,
+                                                  @PathVariable Long gameId,
+                                                  @RequestParam(name = "quantity") int quantity) {
+        Long userId = ((Number) jwt.getClaims().get("uid")).longValue();
+        return ResponseEntity.ok(cartService.updateQuantity(userId, gameId, quantity));
+    }
+
     /** ❌ 移除购物车内的商品 */
     @DeleteMapping("/items/{gameId}")
     public ResponseEntity<CartDTO> removeFromCart(@AuthenticationPrincipal Jwt jwt,

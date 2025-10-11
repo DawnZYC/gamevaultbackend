@@ -70,6 +70,29 @@ public class CartService {
         return toDTO(cart);
     }
 
+    /** 🔄 更新购物车商品数量 */
+    @Transactional
+    public CartDTO updateQuantity(Long userId, Long gameId, int quantity) {
+        if (quantity < 1) {
+            throw new IllegalArgumentException("Quantity must be at least 1");
+        }
+        
+        Cart cart = getOrCreate(userId);
+        
+        Optional<CartItem> existing = cart.getCartItems().stream()
+                .filter(ci -> ci.getGameId().equals(gameId))
+                .findFirst();
+        
+        if (existing.isEmpty()) {
+            throw new NoSuchElementException("Game not found in cart: " + gameId);
+        }
+        
+        existing.get().setQuantity(quantity);
+        cart.setLastModifiedDate(LocalDateTime.now());
+        cartRepository.save(cart);
+        return toDTO(cart);
+    }
+
     @Transactional
     public CartDTO clearCart(Long userId) {
         Cart cart = getOrCreate(userId);
