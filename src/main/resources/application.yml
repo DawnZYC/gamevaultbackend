@@ -1,11 +1,18 @@
 server:
   port: 8080
 
+activation:
+  stock:
+    target: 30
+
 rsa:
   private-key: "file:secrets/keys/rsa-private.pem"
   public-key:  "file:secrets/keys/rsa-public.pem"
 
 spring:
+  cloud:
+    compatibility-verifier:
+      enabled: false
   security:
     oauth2:
       resourceserver:

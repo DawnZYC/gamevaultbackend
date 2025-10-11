@@ -1,10 +1,10 @@
 package com.sg.nusiss.gamevaultbackend.controller.library;
 
-import com.sg.nusiss.gamevaultbackend.dto.library.LibraryItemDto;
-import com.sg.nusiss.gamevaultbackend.entity.library.Game;
+import com.sg.nusiss.gamevaultbackend.dto.library.LibraryItemDTO;
 import com.sg.nusiss.gamevaultbackend.entity.library.PurchasedGameActivationCode;
-import com.sg.nusiss.gamevaultbackend.repository.library.GameRepository;
+import com.sg.nusiss.gamevaultbackend.entity.shopping.Game;
 import com.sg.nusiss.gamevaultbackend.repository.library.PurchasedGameActivationCodeRepository;
+import com.sg.nusiss.gamevaultbackend.repository.shopping.GameRepository;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -31,9 +31,9 @@ public class LibraryController {
         Long uid = ((Number) jwt.getClaims().get("uid")).longValue();
         List<PurchasedGameActivationCode> codes = pacRepo.findByUserId(uid);
         Map<Long, Game> gameCache = new HashMap<>();
-        List<LibraryItemDto> items = codes.stream().map(c -> {
+        List<LibraryItemDTO> items = codes.stream().map(c -> {
             Game g = gameCache.computeIfAbsent(c.getGameId(), id -> gameRepo.findById(id).orElse(null));
-            LibraryItemDto dto = new LibraryItemDto();
+            LibraryItemDTO dto = new LibraryItemDTO();
             dto.activationId = c.getActivationId();
             dto.gameId = c.getGameId();
             dto.activationCode = c.getActivationCode();
