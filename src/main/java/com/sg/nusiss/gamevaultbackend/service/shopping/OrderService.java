@@ -61,7 +61,7 @@ public class OrderService {
     }
 
     /**
-     * Step2: 支付成功 → 标记为 PAID 并为每个订单项分配激活码。
+     * Step2: 支付成功 → 标记为 COMPLETED 并为每个订单项分配激活码。
      * 激活码分配逻辑：
      *  1. 从未使用表取一条激活码；
      *  2. 写入 purchased 表；
@@ -76,28 +76,33 @@ public class OrderService {
         if (!order.getUserId().equals(userId))
             throw new IllegalStateException("Forbidden");
 
-        if (order.getStatus() == OrderStatus.PAID)
+        if (order.getStatus() == OrderStatus.COMPLETED)
             return convertToDTO(order); // 幂等处理
 
-        order.setStatus(OrderStatus.PAID);
+        order.setStatus(OrderStatus.COMPLETED);
 
         for (OrderItem oi : order.getOrderItems()) {
             PurchasedGameActivationCode purchased =
                     codeService.assignCodeToOrderItem(userId, oi.getOrderItemId(), oi.getGameId());
-            oi.setOrderStatus(OrderStatus.PAID);
+            oi.setOrderStatus(OrderStatus.COMPLETED);
             // 如果有必要，也可在此处记录分配日志
         }
 
         return convertToDTO(order);
     }
 
-    /** 可选：支付失败标记 */
+    /** 支付失败标记 - 订单取消 */
     @Transactional
     public void markFailed(Long orderId, Long userId) {
         Order o = orderRepository.findById(orderId).orElseThrow();
         if (!o.getUserId().equals(userId)) throw new IllegalStateException("Forbidden");
-        if (o.getStatus() == OrderStatus.PAID) return;
-        o.setStatus(OrderStatus.FAILED);
+        if (o.getStatus() == OrderStatus.COMPLETED) return; // 已完成的订单不能取消
+        o.setStatus(OrderStatus.CANCELLED);
+        
+        // 同时更新所有订单项的状态
+        for (OrderItem oi : o.getOrderItems()) {
+            oi.setOrderStatus(OrderStatus.CANCELLED);
+        }
     }
 
     public Optional<OrderDTO> findById(Long orderId) {

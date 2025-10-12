@@ -103,7 +103,7 @@ public class FriendServiceTest {
 
         // 验证user2（是好友）
         UserSearchResponse response1 = result.stream()
-                .filter(r -> r.getUid().equals(2L))
+                .filter(r -> r.getUserId().equals(2L))
                 .findFirst()
                 .orElse(null);
         assertNotNull(response1);
@@ -113,7 +113,7 @@ public class FriendServiceTest {
 
         // 验证user3（有待处理请求）
         UserSearchResponse response2 = result.stream()
-                .filter(r -> r.getUid().equals(3L))
+                .filter(r -> r.getUserId().equals(3L))
                 .findFirst()
                 .orElse(null);
         assertNotNull(response2);

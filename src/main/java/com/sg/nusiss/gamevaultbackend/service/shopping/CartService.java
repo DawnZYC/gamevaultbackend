@@ -177,8 +177,11 @@ public class CartService {
         order.setFinalAmount(finalAmount);
         Order saved = orderRepository.save(order);
 
-        cart.setStatus(CartStatus.CHECKED_OUT);
+        // 订单创建后立即清空购物车，避免重复购买
+        cart.getCartItems().clear();
+        cart.setStatus(CartStatus.ACTIVE); // 重置为活跃状态，但内容已清空
         cart.setPaymentMethod(paymentMethod);
+        cart.setLastModifiedDate(LocalDateTime.now());
         cartRepository.save(cart);
 
         return convertToDTO(saved);

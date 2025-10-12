@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserSearchResponse {
-    private Long uid;
+    private Long userId;
     private String username;
     private String email;
     private Boolean isFriend;      // 是否已是好友
