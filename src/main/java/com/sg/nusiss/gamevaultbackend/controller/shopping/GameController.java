@@ -1,6 +1,5 @@
 package com.sg.nusiss.gamevaultbackend.controller.shopping;
 
-import com.sg.nusiss.gamevaultbackend.entity.shopping.Game;
 import com.sg.nusiss.gamevaultbackend.dto.shopping.GameDTO;
 import com.sg.nusiss.gamevaultbackend.service.shopping.GameService;
 import org.springframework.http.HttpStatus;
@@ -46,11 +45,18 @@ public class GameController {
 
     /** 🧩 创建新游戏（⚠️ 仅管理员使用） */
     @PostMapping
-    public ResponseEntity<GameDTO> create(@RequestBody Game game) {
+    public ResponseEntity<GameDTO> create(@RequestBody GameDTO game) {
         GameDTO saved = service.save(game);
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .header("Location", "/api/games/" + saved.getGameId())
                 .body(saved);
+    }
+
+    /** 🔄 更新游戏信息（⚠️ 仅管理员使用） */
+    @PutMapping("/{id}")
+    public ResponseEntity<GameDTO> update(@PathVariable Long id, @RequestBody GameDTO game) {
+        GameDTO updated = service.updateGame(id, game);
+        return ResponseEntity.ok(updated);
     }
 }

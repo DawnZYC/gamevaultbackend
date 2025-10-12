@@ -8,6 +8,7 @@ public class LibraryItemDTO {
     public String title;
     public String activationCode;
     public BigDecimal price;
+    public String imageUrl;
 }
 
 

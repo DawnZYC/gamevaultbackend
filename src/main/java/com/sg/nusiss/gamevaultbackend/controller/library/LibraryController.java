@@ -37,7 +37,11 @@ public class LibraryController {
             dto.activationId = c.getActivationId();
             dto.gameId = c.getGameId();
             dto.activationCode = c.getActivationCode();
-            if (g != null) { dto.title = g.getTitle(); dto.price = g.getPrice(); }
+            if (g != null) { 
+                dto.title = g.getTitle(); 
+                dto.price = g.getPrice(); 
+                dto.imageUrl = g.getImageUrl();
+            }
             return dto;
         }).collect(Collectors.toList());
         return Map.of("items", items);

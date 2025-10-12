@@ -81,6 +81,39 @@ public class GameService {
         return convertToDTO(saved);
     }
 
+    /**
+     * 保存游戏（从DTO创建）
+     */
+    @Transactional
+    public GameDTO save(GameDTO gameDTO) {
+        Game game = convertToEntity(gameDTO);
+        return save(game);
+    }
+
+    /**
+     * 更新游戏信息
+     */
+    @Transactional
+    public GameDTO updateGame(Long gameId, GameDTO gameDTO) {
+        Game existingGame = repo.findById(gameId)
+            .orElseThrow(() -> new RuntimeException("Game not found with id: " + gameId));
+        
+        // 更新游戏信息
+        if (gameDTO.getTitle() != null) existingGame.setTitle(gameDTO.getTitle());
+        if (gameDTO.getDeveloper() != null) existingGame.setDeveloper(gameDTO.getDeveloper());
+        if (gameDTO.getDescription() != null) existingGame.setDescription(gameDTO.getDescription());
+        if (gameDTO.getPrice() != null) existingGame.setPrice(gameDTO.getPrice());
+        if (gameDTO.getDiscountPrice() != null) existingGame.setDiscountPrice(gameDTO.getDiscountPrice());
+        if (gameDTO.getGenre() != null) existingGame.setGenre(gameDTO.getGenre());
+        if (gameDTO.getPlatform() != null) existingGame.setPlatform(gameDTO.getPlatform());
+        if (gameDTO.getReleaseDate() != null) existingGame.setReleaseDate(gameDTO.getReleaseDate());
+        if (gameDTO.getIsActive() != null) existingGame.setIsActive(gameDTO.getIsActive());
+        if (gameDTO.getImageUrl() != null) existingGame.setImageUrl(gameDTO.getImageUrl());
+        
+        Game saved = repo.save(existingGame);
+        return convertToDTO(saved);
+    }
+
     // --- DTO 转换 ---
     private GameDTO convertToDTO(Game game) {
         GameDTO dto = new GameDTO();
@@ -96,5 +129,21 @@ public class GameService {
         dto.setIsActive(game.getIsActive());
         dto.setImageUrl(game.getImageUrl());
         return dto;
+    }
+
+    private Game convertToEntity(GameDTO dto) {
+        Game game = new Game();
+        game.setGameId(dto.getGameId());
+        game.setTitle(dto.getTitle());
+        game.setDeveloper(dto.getDeveloper());
+        game.setDescription(dto.getDescription());
+        game.setPrice(dto.getPrice());
+        game.setDiscountPrice(dto.getDiscountPrice());
+        game.setGenre(dto.getGenre());
+        game.setPlatform(dto.getPlatform());
+        game.setReleaseDate(dto.getReleaseDate());
+        game.setIsActive(dto.getIsActive());
+        game.setImageUrl(dto.getImageUrl());
+        return game;
     }
 }

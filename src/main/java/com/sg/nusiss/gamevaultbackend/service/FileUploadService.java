@@ -88,6 +88,37 @@ public class FileUploadService {
     }
 
     /**
+     * 上传游戏图片文件
+     * @param file 上传的文件
+     * @param gameId 游戏ID
+     * @return 文件访问路径
+     * @throws IOException 文件操作异常
+     */
+    public String uploadGameImage(MultipartFile file, Long gameId) throws IOException {
+        // 验证文件
+        validateFile(file);
+        
+        // 创建上传目录
+        Path uploadDir = Paths.get(uploadPath, "games");
+        if (!Files.exists(uploadDir)) {
+            Files.createDirectories(uploadDir);
+        }
+        
+        // 生成唯一文件名
+        String originalFilename = file.getOriginalFilename();
+        String extension = FilenameUtils.getExtension(originalFilename);
+        String filename = String.format("game_%d_%s.%s", 
+            gameId, UUID.randomUUID().toString().substring(0, 8), extension);
+        
+        // 保存文件
+        Path filePath = uploadDir.resolve(filename);
+        Files.copy(file.getInputStream(), filePath, StandardCopyOption.REPLACE_EXISTING);
+        
+        // 返回相对路径，用于数据库存储
+        return "/uploads/games/" + filename;
+    }
+
+    /**
      * 删除头像文件
      * @param avatarUrl 头像URL
      * @return 是否删除成功
@@ -108,6 +139,32 @@ public class FileUploadService {
             }
         } catch (IOException e) {
             System.err.println("删除头像文件失败: " + e.getMessage());
+        }
+        
+        return false;
+    }
+
+    /**
+     * 删除游戏图片文件
+     * @param imageUrl 游戏图片URL
+     * @return 是否删除成功
+     */
+    public boolean deleteGameImage(String imageUrl) {
+        if (imageUrl == null || imageUrl.isEmpty()) {
+            return true;
+        }
+        
+        try {
+            // 将相对路径转换为绝对路径
+            String filename = imageUrl.replace("/uploads/games/", "");
+            Path filePath = Paths.get(uploadPath, "games", filename);
+            
+            if (Files.exists(filePath)) {
+                Files.delete(filePath);
+                return true;
+            }
+        } catch (IOException e) {
+            System.err.println("删除游戏图片文件失败: " + e.getMessage());
         }
         
         return false;
