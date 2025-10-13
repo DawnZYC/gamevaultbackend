@@ -279,11 +279,6 @@ public class ForumPostService {
         // 查询帖子列表（SQL查询已经包含了统计数据：view_count, like_count, reply_count）
         List<ForumContent> posts = contentMapper.selectActiveByAuthorId(authorId, offset, size);
 
-        // 不需要再次获取统计数据，因为SQL查询已经通过JOIN获取了正确的数据
-        // SQL中使用了：
-        // - like_count: 从 user_content_relations 表实时统计
-        // - view_count: 从 content_metrics 表获取
-        // - reply_count: 从 content_metrics 表获取
 
         // 如果用户登录了，批量查询点赞状态
         if (currentUserId != null && !posts.isEmpty()) {
