@@ -116,7 +116,7 @@ public class AuthController {
                 User user = repo.findById(uid).orElse(null);
                 if (user != null) {
                     Map<String, Object> result = new HashMap<>();
-                    result.put("uid", user.getUserId()); // userId
+//                    result.put("uid", user.getUserId()); // userId
                     result.put("userId", user.getUserId());
                     result.put("username", user.getUsername());
                     result.put("email", user.getEmail() != null ? user.getEmail() : "");
