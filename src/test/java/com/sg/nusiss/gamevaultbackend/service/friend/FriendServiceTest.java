@@ -294,7 +294,7 @@ public class FriendServiceTest {
 
         // Then
         assertEquals(2, result.size(), "应该排除自己，只返回2个用户");
-        assertFalse(result.stream().anyMatch(r -> r.getUid().equals(1L)),
+        assertFalse(result.stream().anyMatch(r -> r.getUserId().equals(1L)),
                 "结果中不应该包含自己");
     }
 
@@ -1406,7 +1406,7 @@ public class FriendServiceTest {
 
         // 验证第一个好友
         FriendResponse response1 = result.get(0);
-        assertEquals(2L, response1.getUid(), "好友ID应该匹配");
+        assertEquals(2L, response1.getUserId(), "好友ID应该匹配");
         assertEquals("user2", response1.getUsername(), "用户名应该匹配");
         assertEquals("user2@example.com", response1.getEmail(), "邮箱应该匹配");
         assertEquals("好友备注1", response1.getRemark(), "备注应该匹配");
@@ -1414,7 +1414,7 @@ public class FriendServiceTest {
 
         // 验证第二个好友
         FriendResponse response2 = result.get(1);
-        assertEquals(3L, response2.getUid());
+        assertEquals(3L, response2.getUserId());
         assertEquals("user3", response2.getUsername());
         assertEquals("好友备注2", response2.getRemark());
 
@@ -1545,7 +1545,7 @@ public class FriendServiceTest {
         FriendResponse response = result.get(0);
 
         // 详细验证所有字段
-        assertEquals(2L, response.getUid(), "用户ID应该匹配");
+        assertEquals(2L, response.getUserId(), "用户ID应该匹配");
         assertEquals("user2", response.getUsername(), "用户名应该匹配");
         assertEquals("user2@example.com", response.getEmail(), "邮箱应该匹配");
         assertEquals("测试备注", response.getRemark(), "备注应该匹配");
