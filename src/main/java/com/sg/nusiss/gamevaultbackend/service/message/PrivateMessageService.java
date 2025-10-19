@@ -21,13 +21,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
 
-/**
- * @ClassName PrivateMessageService
- * @Author HUANG ZHENJIA
- * @Date 2025/10/6
- * @Description
- */
-
 @Service
 @Slf4j
 @RequiredArgsConstructor
@@ -50,26 +43,40 @@ public class PrivateMessageService {
         friendshipRepository.findByUserIdAndFriendIdAndIsActive(senderId, request.getReceiverId(), true)
                 .orElseThrow(() -> new BusinessException(ErrorCode.NO_AUTH_ERROR, "只能给好友发送消息"));
 
-        // 3. 验证消息内容
-        if (request.getContent() == null || request.getContent().trim().isEmpty()) {
+        // 3. 验证消息内容（文件消息可以没有文本内容）
+        if ("text".equals(request.getMessageType()) &&
+                (request.getContent() == null || request.getContent().trim().isEmpty())) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "消息内容不能为空");
         }
 
-        // 4. 创建私聊消息
-        Message message = Message.builder()
+        // 构建消息实体
+        Message.MessageBuilder messageBuilder = Message.builder()
                 .senderId(senderId)
                 .receiverId(request.getReceiverId())
-                .content(request.getContent().trim())
-                .messageType(request.getMessageType())
+                .content(request.getContent() != null ? request.getContent().trim() : "")
+                .messageType(request.getMessageType() != null ? request.getMessageType() : "text")
                 .chatType("private")
                 .createdAt(LocalDateTime.now())
-                .isDeleted(false)
-                .build();
+                .isDeleted(false);
 
-        message = messageRepository.save(message);
+        // 如果是文件消息，添加文件字段
+        if ("file".equals(request.getMessageType()) && request.getFileId() != null) {
+            messageBuilder
+                    .fileId(request.getFileId())
+                    .fileName(request.getFileName())
+                    .fileSize(request.getFileSize())
+                    .fileType(request.getFileType())
+                    .fileExt(request.getFileExt())
+                    .accessUrl(request.getAccessUrl())
+                    .thumbnailUrl(request.getThumbnailUrl());
 
-        log.info("私聊消息发送成功 - 发送者: {}, 接收者: {}, 消息ID: {}",
-                senderId, request.getReceiverId(), message.getId());
+            log.info("保存私聊文件消息 - fileId: {}, fileName: {}", request.getFileId(), request.getFileName());
+        }
+
+        Message message = messageRepository.save(messageBuilder.build());
+
+        log.info("私聊消息发送成功 - 发送者: {}, 接收者: {}, 消息ID: {}, 类型: {}",
+                senderId, request.getReceiverId(), message.getId(), message.getMessageType());
 
         // 5. 转换为响应对象
         return convertToResponse(message);
@@ -97,12 +104,14 @@ public class PrivateMessageService {
         return messages;
     }
 
-    // backend/service/message/PrivateMessageService.java
+    /**
+     * 转换为响应对象（包含文件附件）
+     */
     private MessageResponse convertToResponse(Message message) {
         User sender = userRepository.findById(message.getSenderId())
                 .orElse(null);
 
-        return MessageResponse.builder()
+        MessageResponse.MessageResponseBuilder responseBuilder = MessageResponse.builder()
                 .id(message.getId())
                 .conversationId(message.getConversationId())
                 .senderId(message.getSenderId())
@@ -112,7 +121,23 @@ public class PrivateMessageService {
                 .content(message.getContent())
                 .messageType(message.getMessageType())
                 .chatType("private")
-                .createdAt(message.getCreatedAt())
-                .build();
+                .createdAt(message.getCreatedAt());
+
+        // 如果是文件消息，添加附件信息
+        if ("file".equals(message.getMessageType()) && message.getFileId() != null) {
+            MessageResponse.FileAttachment attachment = MessageResponse.FileAttachment.builder()
+                    .fileId(message.getFileId())
+                    .fileName(message.getFileName())
+                    .fileSize(message.getFileSize())
+                    .fileType(message.getFileType())
+                    .fileExt(message.getFileExt())
+                    .accessUrl(message.getAccessUrl())
+                    .thumbnailUrl(message.getThumbnailUrl())
+                    .build();
+
+            responseBuilder.attachment(attachment);
+        }
+
+        return responseBuilder.build();
     }
 }

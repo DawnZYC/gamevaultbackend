@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.time.LocalDateTime;
 
@@ -17,6 +18,7 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class ChatMessageDto {
     private Long id;
     private Long conversationId;
@@ -27,4 +29,20 @@ public class ChatMessageDto {
     private String content;
     private String messageType;
     private LocalDateTime timestamp;
+
+    private FileAttachment attachment;
+
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class FileAttachment {
+        private String fileId;
+        private String fileName;
+        private Long fileSize;
+        private String fileType;
+        private String fileExt;
+        private String accessUrl;
+        private String thumbnailUrl;
+    }
 }

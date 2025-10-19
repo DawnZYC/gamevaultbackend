@@ -18,13 +18,6 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtAut
 
 import java.security.Principal;
 
-/**
- * @ClassName ChatWebSocketController
- * @Author HUANG ZHENJIA
- * @Date 2025/10/5
- * @Description
- */
-
 @Controller
 @Slf4j
 @RequiredArgsConstructor
@@ -34,14 +27,9 @@ public class ChatWebSocketController {
     private final PrivateMessageService privateMessageService;
     private final SimpMessagingTemplate messagingTemplate;
 
-    /**
-     * 处理客户端发送的群聊消息
-     * 客户端发送到：/app/chat.sendMessage
-     */
     @MessageMapping("/chat.sendMessage")
     public void sendMessage(@Payload SendMessageRequest request, Principal principal) {
         try {
-            // 从 Principal 中获取用户 ID
             Long senderId = extractUserIdFromPrincipal(principal);
 
             if (senderId == null) {
@@ -49,14 +37,17 @@ public class ChatWebSocketController {
                 return;
             }
 
-            log.info("收到 WebSocket 消息 - 群聊ID: {}, 发送者: {}, 内容: {}",
-                    request.getConversationId(), senderId, request.getContent());
+            log.info("收到 WebSocket 消息 - 群聊ID: {}, 发送者: {}, 类型: {}",
+                    request.getConversationId(), senderId, request.getMessageType());
 
-            // 保存消息到数据库和 Redis
+            if ("file".equals(request.getMessageType())) {
+                log.info("文件消息 - fileId: {}, fileName: {}", request.getFileId(), request.getFileName());
+            }
+
             MessageResponse response = messageService.sendMessage(request, senderId);
 
-            // 转换为 WebSocket DTO
-            ChatMessageDto chatMessage = ChatMessageDto.builder()
+            // 直接构建，类型匹配
+            ChatMessageDto.ChatMessageDtoBuilder builder = ChatMessageDto.builder()
                     .id(response.getId())
                     .conversationId(response.getConversationId())
                     .senderId(response.getSenderId())
@@ -64,10 +55,24 @@ public class ChatWebSocketController {
                     .senderEmail(response.getSenderEmail())
                     .content(response.getContent())
                     .messageType(response.getMessageType())
-                    .timestamp(response.getCreatedAt())
-                    .build();
+                    .timestamp(response.getCreatedAt()); // LocalDateTime -> LocalDateTime
 
-            // 广播消息
+            if (response.getAttachment() != null) {
+                builder.attachment(
+                        ChatMessageDto.FileAttachment.builder()
+                                .fileId(response.getAttachment().getFileId())
+                                .fileName(response.getAttachment().getFileName())
+                                .fileSize(response.getAttachment().getFileSize())
+                                .fileType(response.getAttachment().getFileType())
+                                .fileExt(response.getAttachment().getFileExt())
+                                .accessUrl(response.getAttachment().getAccessUrl())
+                                .thumbnailUrl(response.getAttachment().getThumbnailUrl())
+                                .build()
+                );
+            }
+
+            ChatMessageDto chatMessage = builder.build();
+
             messagingTemplate.convertAndSend(
                     "/topic/chat/" + request.getConversationId(),
                     chatMessage
@@ -81,9 +86,6 @@ public class ChatWebSocketController {
         }
     }
 
-    /**
-     * 处理私聊消息
-     */
     @MessageMapping("/chat.sendPrivateMessage")
     public void sendPrivateMessage(@Payload SendPrivateMessageRequest request, Principal principal) {
         try {
@@ -94,11 +96,17 @@ public class ChatWebSocketController {
                 return;
             }
 
-            log.info("收到私聊消息 - 发送者: {}, 接收者: {}", senderId, request.getReceiverId());
+            log.info("收到私聊消息 - 发送者: {}, 接收者: {}, 类型: {}",
+                    senderId, request.getReceiverId(), request.getMessageType());
+
+            if ("file".equals(request.getMessageType())) {
+                log.info("私聊文件消息 - fileId: {}, fileName: {}", request.getFileId(), request.getFileName());
+            }
 
             MessageResponse response = privateMessageService.sendPrivateMessage(request, senderId);
 
-            ChatMessageDto chatMessage = ChatMessageDto.builder()
+            // 直接构建，类型匹配
+            ChatMessageDto.ChatMessageDtoBuilder builder = ChatMessageDto.builder()
                     .id(response.getId())
                     .senderId(response.getSenderId())
                     .receiverId(response.getReceiverId())
@@ -106,17 +114,29 @@ public class ChatWebSocketController {
                     .senderEmail(response.getSenderEmail())
                     .content(response.getContent())
                     .messageType(response.getMessageType())
-                    .timestamp(response.getCreatedAt())
-                    .build();
+                    .timestamp(response.getCreatedAt()); // LocalDateTime -> LocalDateTime
 
-            // 改用 topic 方式，直接发送到特定路径
-            log.info("发送私聊消息到接收者 topic");
+            if (response.getAttachment() != null) {
+                builder.attachment(
+                        ChatMessageDto.FileAttachment.builder()
+                                .fileId(response.getAttachment().getFileId())
+                                .fileName(response.getAttachment().getFileName())
+                                .fileSize(response.getAttachment().getFileSize())
+                                .fileType(response.getAttachment().getFileType())
+                                .fileExt(response.getAttachment().getFileExt())
+                                .accessUrl(response.getAttachment().getAccessUrl())
+                                .thumbnailUrl(response.getAttachment().getThumbnailUrl())
+                                .build()
+                );
+            }
+
+            ChatMessageDto chatMessage = builder.build();
+
             messagingTemplate.convertAndSend(
                     "/topic/private/" + request.getReceiverId(),
                     chatMessage
             );
 
-            log.info("发送私聊消息到发送者 topic");
             messagingTemplate.convertAndSend(
                     "/topic/private/" + senderId,
                     chatMessage
@@ -129,14 +149,11 @@ public class ChatWebSocketController {
         }
     }
 
-    /**
-     * 从 Principal 中提取用户 ID
-     */
     private Long extractUserIdFromPrincipal(Principal principal) {
         if (principal instanceof JwtAuthenticationToken) {
             JwtAuthenticationToken jwtAuth = (JwtAuthenticationToken) principal;
             Jwt jwt = jwtAuth.getToken();
-            return jwt.getClaim("uid");  // 从 JWT 的 uid claim 获取
+            return jwt.getClaim("uid");
         }
         return null;
     }

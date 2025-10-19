@@ -1,5 +1,8 @@
 server:
   port: 8080
+  tomcat:
+    max-swallow-size: 100MB
+    max-http-form-post-size: 100MB
 
 activation:
   stock:
@@ -32,8 +35,8 @@ spring:
   jpa.hibernate.naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
   servlet:
     multipart:
-      max-file-size: 5MB
-      max-request-size: 10MB
+      max-file-size: 100MB
+      max-request-size: 100MB
       enabled: true
 
   data:
@@ -56,8 +59,8 @@ app:
     expiration-minutes: 120
   upload:
     path: uploads
-    max-file-size: 5MB
-    max-request-size: 10MB
+    max-file-size: 100MB
+    max-request-size: 100MB
   pagination:
     default-page-size: 20
     max-page-size: 100
@@ -85,3 +88,44 @@ auth:
 # HashId configuration
 hashid:
   salt: "forum-backend-2024"
+
+minio:
+  endpoint: http://localhost:9000 # MinIO 服务地址
+  access-key: minioadmin  # 访问密钥 (默认账号)
+  secret-key: minioadmin123  # 秘密密钥 (默认密码，生产环境请修改)
+  bucket-name: gamevault-chat # 默认存储桶
+  image-bucket: gamevault-images  # 图片专用桶
+  video-bucket: gamevault-videos  # 视频专用桶
+  file-bucket: gamevault-files  # 文件专用桶
+  audio-bucket: gamevault-audios  # 音频专用桶
+
+file:
+  upload:
+    temp-path: ${java.io.tmpdir}/gamevault-uploads  # 临时文件存储路径
+    image:  # 图片配置
+      max-size: 10485760          # 10MB (10 * 1024 * 1024)
+      allowed-types: jpg,jpeg,png,gif,webp,bmp,svg
+      generate-thumbnail: true  # 是否生成缩略图
+      thumbnail-width: 200  # 缩略图最大宽度
+      thumbnail-height: 200 # 缩略图最大高度
+    video:  # 视频配置
+      max-size: 524288000         # 500MB (500 * 1024 * 1024)
+      allowed-types: mp4,avi,mov,wmv,flv,mkv,webm,m4v
+      generate-cover: true  # 是否生成视频封面
+    document: # 文档配置
+      max-size: 20971520          # 20MB (20 * 1024 * 1024)
+      allowed-types: pdf,doc,docx,xls,xlsx,ppt,pptx,txt,zip,rar,7z
+    audio:  # 音频配置
+      max-size: 52428800          # 50MB (50 * 1024 * 1024)
+      allowed-types: mp3,wav,aac,flac,ogg,m4a,wma
+    chunk:                        # 分片上传配置
+      size: 5242880               # 分片大小 (5MB) 5 * 1024 * 1024
+      min-file-size: 10485760     # 使用分片上传的最小文件大小 (10MB) 10 * 1024 * 1024
+      task-expire-hours: 24 # 分片上传任务过期时间(小时)
+    presigned:  # 预签名URL有效期
+      upload-expire-minutes: 60 # 上传URL有效期(分钟)
+      download-expire-hours: 24 # 下载URL有效期(小时)
+    quick-upload: # 秒传功能
+      enabled: true # 是否启用秒传
+    concurrent: # 并发限制
+      max-uploads-per-user: 5 # 每个用户最大并发上传数

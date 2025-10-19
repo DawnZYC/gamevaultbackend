@@ -1,8 +1,6 @@
 package com.sg.nusiss.gamevaultbackend.service.message;
 
-
 import com.sg.nusiss.gamevaultbackend.common.ErrorCode;
-
 import com.sg.nusiss.gamevaultbackend.dto.message.request.SendMessageRequest;
 import com.sg.nusiss.gamevaultbackend.dto.message.response.MessageResponse;
 import com.sg.nusiss.gamevaultbackend.entity.auth.User;
@@ -24,13 +22,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collectors;
-
-/**
- * @ClassName MessageService
- * @Author HUANG ZHENJIA
- * @Date 2025/9/30
- * @Description
- */
 
 @Service
 @Slf4j
@@ -62,31 +53,50 @@ public class MessageService {
                 request.getConversationId(), senderId, true
         ).orElseThrow(() -> new BusinessException(ErrorCode.NO_AUTH_ERROR, "您不在该群聊中"));
 
-        // 4. 验证消息内容
-        if (request.getContent() == null || request.getContent().trim().isEmpty()) {
+        // 4. 验证消息内容（文件消息可以没有文本内容）
+        if ("text".equals(request.getMessageType()) &&
+                (request.getContent() == null || request.getContent().trim().isEmpty())) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "消息内容不能为空");
         }
 
-        // 保存到 MySQL
-        Message message = Message.builder()
+        // 构建消息实体
+        Message.MessageBuilder messageBuilder = Message.builder()
                 .conversationId(request.getConversationId())
                 .senderId(senderId)
-                .content(request.getContent().trim())
-                .messageType(request.getMessageType())
+                .content(request.getContent() != null ? request.getContent().trim() : "")
+                .messageType(request.getMessageType() != null ? request.getMessageType() : "text")
                 .createdAt(LocalDateTime.now())
-                .isDeleted(false)
-                .build();
+                .isDeleted(false);
 
-        message = messageRepository.save(message);
+        // 如果是文件消息，添加文件字段
+        if ("file".equals(request.getMessageType()) && request.getFileId() != null) {
+            messageBuilder
+                    .fileId(request.getFileId())
+                    .fileName(request.getFileName())
+                    .fileSize(request.getFileSize())
+                    .fileType(request.getFileType())
+                    .fileExt(request.getFileExt())
+                    .accessUrl(request.getAccessUrl())
+                    .thumbnailUrl(request.getThumbnailUrl());
+
+            log.info("保存文件消息 - fileId: {}, fileName: {}", request.getFileId(), request.getFileName());
+        }
+
+        Message message = messageRepository.save(messageBuilder.build());
 
         // 转换为响应对象
         MessageResponse response = convertToResponse(message);
 
+        log.info("转换后的响应 - messageType: {}, hasAttachment: {}, attachment: {}",
+                response.getMessageType(),
+                response.getAttachment() != null,
+                response.getAttachment());
+
         // 缓存到 Redis
         messageCacheService.cacheMessage(response);
 
-        log.info("消息已发送并同步 - 群聊ID: {}, 发送者: {}, 消息ID: {}",
-                request.getConversationId(), senderId, message.getId());
+        log.info("消息已发送并同步 - 群聊ID: {}, 发送者: {}, 消息ID: {}, 类型: {}",
+                request.getConversationId(), senderId, message.getId(), message.getMessageType());
 
         return response;
     }
@@ -134,23 +144,41 @@ public class MessageService {
     }
 
     /**
-     * 转换为响应对象
+     * 转换为响应对象（包含文件附件）
      */
     private MessageResponse convertToResponse(Message message) {
         User sender = userRepository.findById(message.getSenderId())
                 .orElse(null);
 
-        return MessageResponse.builder()
+        MessageResponse.MessageResponseBuilder responseBuilder = MessageResponse.builder()
                 .id(message.getId())
                 .conversationId(message.getConversationId())
                 .senderId(message.getSenderId())
-                .receiverId(message.getReceiverId())      // 添加这行
+                .receiverId(message.getReceiverId())
                 .senderUsername(sender != null ? sender.getUsername() : "未知用户")
                 .senderEmail(sender != null ? sender.getEmail() : "")
                 .content(message.getContent())
                 .messageType(message.getMessageType())
-                .chatType("group")                         // 添加这行
-                .createdAt(message.getCreatedAt())
-                .build();
+                .chatType("group")
+                .createdAt(message.getCreatedAt());
+
+        // 如果是文件消息，添加附件信息
+        if ("file".equals(message.getMessageType()) && message.getFileId() != null) {
+            MessageResponse.FileAttachment attachment = MessageResponse.FileAttachment.builder()
+                    .fileId(message.getFileId())
+                    .fileName(message.getFileName())
+                    .fileSize(message.getFileSize())
+                    .fileType(message.getFileType())
+                    .fileExt(message.getFileExt())
+                    .accessUrl(message.getAccessUrl())
+                    .thumbnailUrl(message.getThumbnailUrl())
+                    .build();
+
+            responseBuilder.attachment(attachment);
+            log.info("构建文件附件 - fileId: {}, fileName: {}, accessUrl: {}",
+                    message.getFileId(), message.getFileName(), message.getAccessUrl());
+        }
+
+        return responseBuilder.build();
     }
 }

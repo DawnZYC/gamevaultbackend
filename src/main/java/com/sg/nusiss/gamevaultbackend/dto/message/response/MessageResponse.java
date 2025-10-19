@@ -29,7 +29,25 @@ public class MessageResponse {
     private String senderUsername;
     private String senderEmail;
     private String content;
-    private String messageType;
     private String chatType;
+    private String messageType;
     private LocalDateTime createdAt;
+    private FileAttachment attachment;
+
+    /**
+     * 文件附件内部类
+     */
+    @Data
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
+    public static class FileAttachment {
+        private String fileId;
+        private String fileName;
+        private Long fileSize;
+        private String fileType;
+        private String fileExt;
+        private String accessUrl;
+        private String thumbnailUrl;
+    }
 }
