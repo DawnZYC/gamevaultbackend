@@ -60,7 +60,7 @@ jobs:
       - name: Run OWASP ZAP baseline scan
         run: |
           chmod +x zap-scan.sh
-          ./zap-scan.sh
+          ./scripts/zap-scan.sh
 
       # ==========================
       # Upload ZAP HTML report
@@ -79,7 +79,7 @@ jobs:
       - name: Generate DAST Summary
         if: always()
         run: |
-          echo "## 🔍 OWASP ZAP DAST Scan Summary" >> $GITHUB_STEP_SUMMARY
+          echo "## OWASP ZAP DAST Scan Summary" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
           if [ -f "zap_baseline_report.html" ]; then
@@ -90,9 +90,9 @@ jobs:
             echo "- **Medium Severity Alerts:** $MEDIUM_COUNT" >> $GITHUB_STEP_SUMMARY
             echo "- **Low Severity Alerts:**    $LOW_COUNT" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
-            echo "📄 ZAP full report is available in workflow artifacts." >> $GITHUB_STEP_SUMMARY
+            echo "ZAP full report is available in workflow artifacts." >> $GITHUB_STEP_SUMMARY
           else
-            echo "⚠️ No ZAP report found — scan may have failed or target was unreachable." >> $GITHUB_STEP_SUMMARY
+            echo "No ZAP report found — scan may have failed or target was unreachable." >> $GITHUB_STEP_SUMMARY
           fi
 
       # ==========================

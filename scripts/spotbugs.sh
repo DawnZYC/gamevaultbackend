@@ -22,12 +22,12 @@ if [ -f "target/spotbugsXml.xml" ]; then
     echo "Found $BUGS potential bugs"
 
     if [ "$BUGS" -gt 0 ]; then
-        echo "⚠ Warning: Potential bugs detected. Please review the report."
+        echo "Warning: Potential bugs detected. Please review the report."
     else
-        echo "✓ No bugs found!"
+        echo "No bugs found!"
     fi
 else
-    echo "⚠ SpotBugs report not generated"
+    echo "SpotBugs report not generated"
 fi
 
 echo "=========================================="
