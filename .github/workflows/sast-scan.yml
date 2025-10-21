@@ -120,7 +120,7 @@ jobs:
           cache: 'maven'
 
       - name: Build with Maven
-        run: mvn clean compile -DskipTests -B
+        run: mvn clean compile -Dcheckstyle.skip
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
