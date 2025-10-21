@@ -36,6 +36,7 @@ screenshots/
 
 # Maven
 target/
+!.mvn/
 !.mvn/wrapper/maven-wrapper.jar
 pom.xml.tag
 pom.xml.releaseBackup
