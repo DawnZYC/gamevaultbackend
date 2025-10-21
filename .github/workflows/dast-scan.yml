@@ -59,7 +59,7 @@ jobs:
       # ==========================
       - name: Run OWASP ZAP baseline scan
         run: |
-          chmod +x zap-scan.sh
+          chmod +x ./scripts/zap-scan.sh
           ./scripts/zap-scan.sh
 
       # ==========================

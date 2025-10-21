@@ -46,7 +46,7 @@ jobs:
         env:
           NVD_API_KEY: ${{ secrets.NVD_TOKEN }}
         run: |
-          ./dependency-check/bin/dependency-check.sh \
+          ./scripts/dependency-check.sh \
             --project "GameVault Backend" \
             --scan . \
             --format HTML \
