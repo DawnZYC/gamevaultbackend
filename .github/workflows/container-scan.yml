@@ -14,6 +14,10 @@ on:
     # Run weekly on Monday at 02:00 UTC
     - cron: '0 2 * * 1'
 
+permissions:
+  contents: read
+  security-events: write
+
 env:
   IMAGE_NAME: gamevault-backend
 
