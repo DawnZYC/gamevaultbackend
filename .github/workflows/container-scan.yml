@@ -1,0 +1,145 @@
+# ==========================================
+# Container Security Scan Workflow
+# Based on Workshop 7 - Docker Scout
+# ==========================================
+
+name: "Container Scan - Docker Security"
+
+on:
+  push:
+    branches: [dev/master, master, main]
+  pull_request:
+    branches: [dev/master, main]
+  schedule:
+    # Run weekly on Monday at 02:00 UTC
+    - cron: '0 2 * * 1'
+
+env:
+  IMAGE_NAME: gamevault-backend
+
+jobs:
+  docker-scout-scan:
+    runs-on: ubuntu-latest
+    name: Docker Scout Security Scan
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Docker Image for Scanning
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: ./Dockerfile
+          load: true
+          tags: ${{ env.IMAGE_NAME }}:scan
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Login to Docker Hub (for Scout)
+        if: github.event_name != 'pull_request'
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Docker Scout - CVE Scan
+        uses: docker/scout-action@v1
+        with:
+          command: cves
+          image: ${{ env.IMAGE_NAME }}:scan
+          only-severities: critical,high
+          exit-code: false
+          summary: true
+
+      - name: Docker Scout - Recommendations
+        uses: docker/scout-action@v1
+        with:
+          command: recommendations
+          image: ${{ env.IMAGE_NAME }}:scan
+          exit-code: false
+
+      - name: Docker Scout - Compare to Latest
+        if: github.event_name == 'pull_request'
+        uses: docker/scout-action@v1
+        with:
+          command: compare
+          image: ${{ env.IMAGE_NAME }}:scan
+          to: ${{ env.IMAGE_NAME }}:latest
+          exit-code: false
+
+  trivy-scan:
+    runs-on: ubuntu-latest
+    name: Trivy Container Scan
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker Image
+        run: |
+          docker build -t ${{ env.IMAGE_NAME }}:scan .
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.IMAGE_NAME }}:scan
+          format: 'sarif'
+          output: 'trivy-results.sarif'
+          severity: 'CRITICAL,HIGH'
+
+      - name: Upload Trivy results to GitHub Security
+        uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: 'trivy-results.sarif'
+
+      - name: Run Trivy - Table Output
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: ${{ env.IMAGE_NAME }}:scan
+          format: 'table'
+          exit-code: '0'
+          severity: 'CRITICAL,HIGH,MEDIUM'
+
+      - name: Generate Security Summary
+        if: always()
+        run: |
+          echo "## 🔐 Container Security Scan Results" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Trivy Scan Completed" >> $GITHUB_STEP_SUMMARY
+          echo "- Image: ${{ env.IMAGE_NAME }}:scan" >> $GITHUB_STEP_SUMMARY
+          echo "- Scan Date: $(date)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "📊 Check the Security tab for detailed results" >> $GITHUB_STEP_SUMMARY
+
+  snyk-scan:
+    runs-on: ubuntu-latest
+    name: Snyk Container Scan
+    if: github.event_name != 'pull_request'
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Build Docker Image
+        run: |
+          docker build -t ${{ env.IMAGE_NAME }}:scan .
+
+#      - name: Run Snyk to check Docker image for vulnerabilities
+#        uses: snyk/actions/docker@master
+#        continue-on-error: true
+#        env:
+#          SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+#        with:
+#          image: ${{ env.IMAGE_NAME }}:scan
+#          args: --severity-threshold=high --file=Dockerfile
+
+#      - name: Upload Snyk results
+#        if: always()
+#        uses: github/codeql-action/upload-sarif@v3
+#        with:
+#          sarif_file: snyk.sarif
