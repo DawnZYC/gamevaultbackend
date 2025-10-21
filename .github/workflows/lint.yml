@@ -37,13 +37,13 @@ jobs:
       - name: Install dependencies
         run: mvn dependency:go-offline -B
 
-      - name: Run Checkstyle (ignore violations)
-        run: |
-          echo "Running Checkstyle (ignore violations)..."
-          mvn checkstyle:checkstyle \
-            -Dcheckstyle.config.location=google_checks.xml \
-            -Dcheckstyle.failOnViolation=false
-        continue-on-error: true
+#      - name: Run Checkstyle (ignore violations)
+#        run: |
+#          echo "Running Checkstyle (ignore violations)..."
+#          mvn checkstyle:checkstyle \
+#            -Dcheckstyle.config.location=google_checks.xml \
+#            -Dcheckstyle.failOnViolation=false
+#        continue-on-error: true
 
       - name: Run SpotBugs
         run: |
