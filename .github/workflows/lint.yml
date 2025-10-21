@@ -67,9 +67,10 @@ jobs:
             echo "- **Checkstyle**: $VIOLATIONS violations found" >> $GITHUB_STEP_SUMMARY
           fi
 
-          if [ -f "target/spotbugsXml.xml" ]; then
-            BUGS=$(grep -c "<BugInstance" target/spotbugsXml.xml || echo "0")
+          if [ -f "target/spotbugs-report.html" ]; then
+            BUGS=$(grep -c "Bug" target/spotbugs-report.html || echo "0")
             echo "- **SpotBugs**: $BUGS potential bugs found" >> $GITHUB_STEP_SUMMARY
+            echo "SpotBugs report: [artifact](target/spotbugs-report.html)" >> $GITHUB_STEP_SUMMARY
           fi
 
           if [ -f "target/pmd.xml" ]; then
@@ -87,15 +88,13 @@ jobs:
             target/site/checkstyle.html
           retention-days: 30
 
-      - name: Upload SpotBugs Report
+      - name: Upload SpotBugs HTML Report
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: spotbugs-report
-          path: |
-            target/spotbugsXml.xml
-            target/site/spotbugs.html
-          retention-days: 30
+          name: spotbugs-html-report
+          path: target/spotbugs-report.html
+          retention-days: 7
 
       - name: Upload PMD Report
         if: always()

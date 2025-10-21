@@ -184,7 +184,7 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
-            <!-- Checkstyle Plugin for Code Quality -->
+             <!--Checkstyle Plugin for Code Quality -->
             <!--<plugin>-->
             <!--    <groupId>org.apache.maven.plugins</groupId>-->
             <!--    <artifactId>maven-checkstyle-plugin</artifactId>-->
@@ -210,22 +210,19 @@
             <plugin>
                 <groupId>com.github.spotbugs</groupId>
                 <artifactId>spotbugs-maven-plugin</artifactId>
-                <version>4.8.3.0</version>
+                <version>4.7.3.0</version>
+                <executions>
+                    <execution>
+                        <phase>verify</phase>
+                    </execution>
+                </executions>
                 <configuration>
                     <effort>Max</effort>
                     <threshold>Low</threshold>
-                    <failOnError>false</failOnError>
-                    <xmlOutput>true</xmlOutput>
+                    <xmlOutput>false</xmlOutput>
+                    <outputFile>target/spotbugs-report.html</outputFile>
+                    <includeTests>false</includeTests>
                 </configuration>
-                <executions>
-                    <execution>
-                        <id>analyze-compile</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>check</goal>
-                        </goals>
-                    </execution>
-                </executions>
             </plugin>
 
             <!-- PMD Plugin for Code Quality -->

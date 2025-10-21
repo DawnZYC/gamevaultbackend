@@ -77,14 +77,14 @@ jobs:
             echo "" >> $GITHUB_STEP_SUMMARY
 
             if [ "$CRITICAL" -gt 0 ]; then
-              echo "❌ **Critical vulnerabilities detected! Immediate action required.**" >> $GITHUB_STEP_SUMMARY
+              echo "**Critical vulnerabilities detected! Immediate action required.**" >> $GITHUB_STEP_SUMMARY
             elif [ "$HIGH" -gt 0 ]; then
-              echo "⚠️ **High severity vulnerabilities detected. Please review.**" >> $GITHUB_STEP_SUMMARY
+              echo "**High severity vulnerabilities detected. Please review.**" >> $GITHUB_STEP_SUMMARY
             else
-              echo "✅ **No critical or high severity vulnerabilities found.**" >> $GITHUB_STEP_SUMMARY
+              echo "**No critical or high severity vulnerabilities found.**" >> $GITHUB_STEP_SUMMARY
             fi
           else
-            echo "⚠️ Report not generated" >> $GITHUB_STEP_SUMMARY
+            echo "Report not generated" >> $GITHUB_STEP_SUMMARY
           fi
 
       - name: Upload Dependency Check Report
