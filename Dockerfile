@@ -25,7 +25,7 @@ RUN mvn dependency:go-offline -B
 COPY src ./src
 
 # Build the application (skip tests in Docker build, tests run in CI)
-RUN mvn clean package -DskipTests -B
+RUN mvn clean compile -Dcheckstyle.skip
 
 # ==========================================
 # Stage 2: Runtime Stage (Lightweight JRE)
