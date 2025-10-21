@@ -1,0 +1,103 @@
+# ==========================================
+# Dynamic Application Security Testing (DAST) Workflow
+# Using OWASP ZAP via zap-scan.sh
+# ==========================================
+name: "DAST - OWASP ZAP Scan"
+
+on:
+  push:
+    branches: [dev/master, master, main]
+  pull_request:
+    branches: [dev/master, main]
+  schedule:
+    # 每周一凌晨 02:30 UTC 自动运行
+    - cron: '30 2 * * 1'
+
+permissions:
+  contents: read
+  actions: read
+  security-events: write  # 允许上传安全报告（若未来整合 Code Scanning）
+
+env:
+  IMAGE_NAME: gamevault-backend
+  ZAP_TARGET_URL: http://localhost:8080
+
+jobs:
+  dast-scan:
+    name: OWASP ZAP DAST Scan
+    runs-on: ubuntu-latest
+    steps:
+      # ==========================
+      # Checkout code
+      # ==========================
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ==========================
+      # Set up Docker environment
+      # ==========================
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # ==========================
+      # Build and start application
+      # ==========================
+      - name: Build application Docker image
+        run: docker build -t ${{ env.IMAGE_NAME }}:dast .
+
+      - name: Run application container (background)
+        run: |
+          docker run -d --rm \
+            --name gamevault-dast-target \
+            -p 8080:8080 \
+            ${{ env.IMAGE_NAME }}:dast
+          echo "Waiting 20s for app startup..."
+          sleep 20
+
+      # ==========================
+      # Run OWASP ZAP DAST Scan
+      # ==========================
+      - name: Run OWASP ZAP baseline scan
+        run: |
+          chmod +x zap-scan.sh
+          ./zap-scan.sh
+
+      # ==========================
+      # Upload ZAP HTML report
+      # ==========================
+      - name: Upload ZAP HTML Report
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: zap-baseline-report
+          path: zap_baseline_report.html
+          retention-days: 14
+
+      # ==========================
+      # Generate Summary
+      # ==========================
+      - name: Generate DAST Summary
+        if: always()
+        run: |
+          echo "## 🔍 OWASP ZAP DAST Scan Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ -f "zap_baseline_report.html" ]; then
+            HIGH_COUNT=$(grep -o "FAIL-High" zap_baseline_report.html | wc -l || echo 0)
+            MEDIUM_COUNT=$(grep -o "FAIL-Medium" zap_baseline_report.html | wc -l || echo 0)
+            LOW_COUNT=$(grep -o "FAIL-Low" zap_baseline_report.html | wc -l || echo 0)
+            echo "- **High Severity Alerts:**   $HIGH_COUNT" >> $GITHUB_STEP_SUMMARY
+            echo "- **Medium Severity Alerts:** $MEDIUM_COUNT" >> $GITHUB_STEP_SUMMARY
+            echo "- **Low Severity Alerts:**    $LOW_COUNT" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo "📄 ZAP full report is available in workflow artifacts." >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️ No ZAP report found — scan may have failed or target was unreachable." >> $GITHUB_STEP_SUMMARY
+          fi
+
+      # ==========================
+      # Cleanup (always run)
+      # ==========================
+      - name: Stop and remove containers
+        if: always()
+        run: docker stop gamevault-dast-target || true

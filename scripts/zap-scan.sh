@@ -48,7 +48,7 @@ docker run --rm \
 if [ -f "zap_baseline_report.html" ]; then
     echo "✓ ZAP scan report generated: zap_baseline_report.html"
 else
-    echo "⚠ ZAP scan report not generated"
+    echo "ZAP scan report not generated"
 fi
 
 echo "=========================================="

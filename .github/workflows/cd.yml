@@ -44,11 +44,11 @@ jobs:
           tag_name: ${{ github.ref_name }}
           release_name: Release ${{ github.ref_name }}
           body: |
-            ## 🚀 GameVault Backend ${{ github.ref_name }}
+            ## GameVault Backend ${{ github.ref_name }}
 
             ${{ steps.changelog.outputs.clean_changelog }}
 
-            ### 📦 Docker Image
+            ### Docker Image
             ```
             docker pull ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}
             ```
@@ -123,7 +123,7 @@ jobs:
 
       - name: Generate Deployment Summary
         run: |
-          echo "## 🚀 Deployment Completed" >> $GITHUB_STEP_SUMMARY
+          echo "## Deployment Completed" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Docker Image Published" >> $GITHUB_STEP_SUMMARY
           echo "- Registry: Docker Hub" >> $GITHUB_STEP_SUMMARY
@@ -151,13 +151,13 @@ jobs:
 
       - name: Deploy Notification
         run: |
-          echo "## 🎯 Staging Deployment" >> $GITHUB_STEP_SUMMARY
+          echo "## Staging Deployment" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "✅ Application deployed to staging environment" >> $GITHUB_STEP_SUMMARY
+          echo "Application deployed to staging environment" >> $GITHUB_STEP_SUMMARY
           echo "- Environment: Staging" >> $GITHUB_STEP_SUMMARY
           echo "- Image: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:latest" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "🔗 [Access Staging](https://staging.gamevault.example.com)" >> $GITHUB_STEP_SUMMARY
+          echo "[Access Staging](https://staging.gamevault.example.com)" >> $GITHUB_STEP_SUMMARY
 
       # Add your deployment commands here
       # Examples:
@@ -181,13 +181,13 @@ jobs:
 
       - name: Deploy Notification
         run: |
-          echo "## 🎯 Production Deployment" >> $GITHUB_STEP_SUMMARY
+          echo "## Production Deployment" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "✅ Application deployed to production environment" >> $GITHUB_STEP_SUMMARY
+          echo "Application deployed to production environment" >> $GITHUB_STEP_SUMMARY
           echo "- Environment: Production" >> $GITHUB_STEP_SUMMARY
           echo "- Version: ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
           echo "- Image: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "🔗 [Access Production](https://gamevault.example.com)" >> $GITHUB_STEP_SUMMARY
+          echo "[Access Production](https://gamevault.example.com)" >> $GITHUB_STEP_SUMMARY
 
       # Add your production deployment commands here

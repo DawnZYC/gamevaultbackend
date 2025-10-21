@@ -97,19 +97,19 @@ jobs:
 
       - name: Generate Build Summary
         run: |
-          echo "## 🏗️ Build Results" >> $GITHUB_STEP_SUMMARY
+          echo "## Build Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "✅ Build completed successfully" >> $GITHUB_STEP_SUMMARY
+          echo "Build completed successfully" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
           if [ -f "target/site/jacoco/index.html" ]; then
-            echo "📊 Code Coverage report generated" >> $GITHUB_STEP_SUMMARY
+            echo "Code Coverage report generated" >> $GITHUB_STEP_SUMMARY
           fi
 
           JAR_FILE=$(ls target/*.jar | head -n 1)
           if [ -f "$JAR_FILE" ]; then
             JAR_SIZE=$(du -h "$JAR_FILE" | cut -f1)
-            echo "📦 JAR file: $(basename $JAR_FILE) ($JAR_SIZE)" >> $GITHUB_STEP_SUMMARY
+            echo "JAR file: $(basename $JAR_FILE) ($JAR_SIZE)" >> $GITHUB_STEP_SUMMARY
           fi
 
       - name: Upload JAR Artifact
@@ -155,8 +155,8 @@ jobs:
 
       - name: Generate Docker Build Summary
         run: |
-          echo "## 🐳 Docker Build Results" >> $GITHUB_STEP_SUMMARY
+          echo "## Docker Build Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "✅ Docker image built successfully" >> $GITHUB_STEP_SUMMARY
+          echo "Docker image built successfully" >> $GITHUB_STEP_SUMMARY
           echo "- Image: ${{ env.IMAGE_NAME }}" >> $GITHUB_STEP_SUMMARY
           echo "- Tags: latest, ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY

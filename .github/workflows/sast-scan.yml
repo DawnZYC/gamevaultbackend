@@ -42,25 +42,25 @@ jobs:
           wget https://github.com/jeremylong/DependencyCheck/releases/download/v9.0.9/dependency-check-9.0.9-release.zip
           unzip -q dependency-check-9.0.9-release.zip
 
-#      - name: Run OWASP Dependency Check
-#        env:
-#          NVD_API_KEY: ${{ secrets.NVD_API_KEY }}
-#        run: |
-#          ./dependency-check/bin/dependency-check.sh \
-#            --project "GameVault Backend" \
-#            --scan . \
-#            --format HTML \
-#            --format JSON \
-#            --format XML \
-#            --out ./dependency-check-report \
-#            --nvdApiKey ${NVD_API_KEY:-""} \
-#            --suppression ./dependency-check-suppression.xml || true
-#        continue-on-error: true
+      - name: Run OWASP Dependency Check
+        env:
+          NVD_API_KEY: ${{ secrets.NVD_TOKEN }}
+        run: |
+          ./dependency-check/bin/dependency-check.sh \
+            --project "GameVault Backend" \
+            --scan . \
+            --format HTML \
+            --format JSON \
+            --format XML \
+            --out ./dependency-check-report \
+            --nvdApiKey ${NVD_TOKEN:-""} \
+            --suppression ./dependency-check-suppression.xml || true
+        continue-on-error: true
 
       - name: Parse Vulnerability Results
         if: always()
         run: |
-          echo "## 🔒 SAST Scan Results" >> $GITHUB_STEP_SUMMARY
+          echo "##SAST Scan Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
           if [ -f "./dependency-check-report/dependency-check-report.json" ]; then
@@ -70,10 +70,10 @@ jobs:
             LOW=$(grep -o '"severity":"LOW"' ./dependency-check-report/dependency-check-report.json | wc -l || echo "0")
 
             echo "### Vulnerabilities Found:" >> $GITHUB_STEP_SUMMARY
-            echo "- 🔴 Critical: $CRITICAL" >> $GITHUB_STEP_SUMMARY
-            echo "- 🟠 High: $HIGH" >> $GITHUB_STEP_SUMMARY
-            echo "- 🟡 Medium: $MEDIUM" >> $GITHUB_STEP_SUMMARY
-            echo "- 🟢 Low: $LOW" >> $GITHUB_STEP_SUMMARY
+            echo "- Critical: $CRITICAL" >> $GITHUB_STEP_SUMMARY
+            echo "- High: $HIGH" >> $GITHUB_STEP_SUMMARY
+            echo "- Medium: $MEDIUM" >> $GITHUB_STEP_SUMMARY
+            echo "- Low: $LOW" >> $GITHUB_STEP_SUMMARY
             echo "" >> $GITHUB_STEP_SUMMARY
 
             if [ "$CRITICAL" -gt 0 ]; then
@@ -94,6 +94,13 @@ jobs:
           name: sast-dependency-check-report
           path: ./dependency-check-report/
           retention-days: 30
+
+      - name: Archive production artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: sast-dependency-check-report-html
+          path: |
+            ./dependency-check-report.html
 
   codeql-analysis:
     name: CodeQL Analysis

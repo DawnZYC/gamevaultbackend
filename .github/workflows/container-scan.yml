@@ -112,13 +112,13 @@ jobs:
       - name: Generate Security Summary
         if: always()
         run: |
-          echo "## 🔐 Container Security Scan Results" >> $GITHUB_STEP_SUMMARY
+          echo "## Container Security Scan Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Trivy Scan Completed" >> $GITHUB_STEP_SUMMARY
           echo "- Image: ${{ env.IMAGE_NAME }}:scan" >> $GITHUB_STEP_SUMMARY
           echo "- Scan Date: $(date)" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "📊 Check the Security tab for detailed results" >> $GITHUB_STEP_SUMMARY
+          echo "Check the Security tab for detailed results" >> $GITHUB_STEP_SUMMARY
 
   snyk-scan:
     runs-on: ubuntu-latest

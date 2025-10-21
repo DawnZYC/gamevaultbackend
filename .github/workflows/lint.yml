@@ -59,7 +59,7 @@ jobs:
 
       - name: Generate Lint Summary
         run: |
-          echo "## 📋 Lint Results" >> $GITHUB_STEP_SUMMARY
+          echo "## Lint Results" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
 
           if [ -f "target/checkstyle-result.xml" ]; then
