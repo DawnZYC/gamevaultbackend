@@ -43,6 +43,8 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/check-email").permitAll()
                         .requestMatchers("/api/auth/check-username").permitAll()
                         .requestMatchers("/api/auth/logout").permitAll()
+                        .requestMatchers("/api/developer/devgameasset/download/**").permitAll()
+                        .requestMatchers("/api/developer/**").authenticated()
                         .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth -> oauth

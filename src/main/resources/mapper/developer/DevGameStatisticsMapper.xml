@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ✅ 修改 namespace 为新的包路径 -->
+<mapper namespace="com.sg.nusiss.gamevaultbackend.mapper.developer.DevGameStatisticsMapper">
+
+    <!-- ✅ 修改实体类路径为你新的 entity 包 -->
+    <resultMap id="DevGameStatisticsResultMap" type="com.sg.nusiss.gamevaultbackend.entity.developer.DevGameStatistics">
+        <id property="id" column="id"/>
+        <result property="gameId" column="game_id"/>
+        <result property="viewCount" column="view_count"/>
+        <result property="downloadCount" column="download_count"/>
+        <result property="rating" column="rating"/>
+        <result property="updatedAt" column="updated_at"/>
+    </resultMap>
+
+    <select id="findByGameId"
+            parameterType="string"
+            resultMap="DevGameStatisticsResultMap">
+        SELECT
+            id,
+            game_id,
+            view_count,
+            download_count,
+            rating,
+            updated_at
+        FROM dev_game_statistics
+        WHERE game_id = #{gameId}
+        LIMIT 1
+    </select>
+
+    <insert id="insert"
+            parameterType="com.sg.nusiss.gamevaultbackend.entity.developer.DevGameStatistics">
+        INSERT INTO dev_game_statistics (
+            id,
+            game_id,
+            view_count,
+            download_count,
+            rating,
+            updated_at
+        ) VALUES (
+                     #{id},
+                     #{gameId},
+                     #{viewCount},
+                     #{downloadCount},
+                     #{rating},
+                     #{updatedAt}
+                 )
+    </insert>
+
+    <update id="updateCounts">
+        UPDATE dev_game_statistics
+        SET
+            view_count = view_count + #{viewIncrement},
+            download_count = download_count + #{downloadIncrement},
+            updated_at = CURRENT_TIMESTAMP
+        WHERE game_id = #{gameId}
+    </update>
+
+    <delete id="deleteByGameId" parameterType="string">
+        DELETE FROM dev_game_statistics WHERE game_id = #{gameId}
+    </delete>
+
+
+</mapper>

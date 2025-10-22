@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ✅ namespace 改为你新的包路径 -->
+<mapper namespace="com.sg.nusiss.gamevaultbackend.mapper.developer.DevGameMapper">
+
+    <!-- ✅ 实体类路径改为新的 entity 包 -->
+    <resultMap id="BaseResultMap" type="com.sg.nusiss.gamevaultbackend.entity.developer.DevGame">
+        <id column="id" property="id"/>
+        <result column="developer_profile_id" property="developerProfileId"/>
+        <result column="name" property="name"/>
+        <result column="description" property="description"/>
+        <result column="release_date" property="releaseDate"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="com.sg.nusiss.gamevaultbackend.entity.developer.DevGame">
+        INSERT INTO dev_game (
+            id,
+            developer_profile_id,
+            name,
+            description,
+            release_date,
+            created_at,
+            updated_at
+        ) VALUES (
+                     #{id},
+                     #{developerProfileId},
+                     #{name},
+                     #{description},
+                     #{releaseDate},
+                     #{createdAt},
+                     #{updatedAt}
+                 )
+    </insert>
+
+    <select id="selectById" parameterType="string" resultMap="BaseResultMap">
+        SELECT
+            id,
+            developer_profile_id,
+            name,
+            description,
+            release_date,
+            created_at,
+            updated_at
+        FROM dev_game
+        WHERE id = #{id}
+    </select>
+
+    <select id="selectByDeveloperProfileId" parameterType="string" resultMap="BaseResultMap">
+        SELECT
+            id,
+            developer_profile_id,
+            name,
+            description,
+            release_date,
+            created_at,
+            updated_at
+        FROM dev_game
+        WHERE developer_profile_id = #{developerProfileId}
+        ORDER BY created_at DESC
+    </select>
+
+    <update id="update" parameterType="com.sg.nusiss.gamevaultbackend.entity.developer.DevGame">
+        UPDATE dev_game
+        <set>
+            <if test="name != null">name = #{name},</if>
+            <if test="description != null">description = #{description},</if>
+            <if test="releaseDate != null">release_date = #{releaseDate},</if>
+            updated_at = CURRENT_TIMESTAMP
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <delete id="deleteById" parameterType="string">
+        DELETE FROM dev_game WHERE id = #{id}
+    </delete>
+
+    <!-- ✅ 分页查询 -->
+    <select id="findAllPaged" resultType="com.sg.nusiss.gamevaultbackend.entity.developer.DevGame">
+        SELECT *
+        FROM dev_game
+        ORDER BY created_at DESC
+        LIMIT #{pageSize} OFFSET #{offset}
+    </select>
+
+    <!-- ✅ 统计总数 -->
+    <select id="countAll" resultType="long">
+        SELECT COUNT(*) FROM dev_game
+    </select>
+
+</mapper>
