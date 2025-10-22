@@ -1,10 +1,18 @@
+# ===== Maven Build =====
 HELP.md
 target/
 .mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
 
-### STS ###
+# ===== IDE =====
+.idea/
+*.iws
+*.iml
+*.ipr
+.vscode/
+
+# ===== Spring / Java =====
 .apt_generated
 .classpath
 .factorypath
@@ -12,34 +20,15 @@ target/
 .settings
 .springBeans
 .sts4-cache
-
-### IntelliJ IDEA ###
-.idea
-*.iws
-*.iml
-*.ipr
-
-### NetBeans ###
-/nbproject/private/
-/nbbuild/
-/dist/
-/nbdist/
-/.nb-gradle/
 build/
 !**/src/main/**/build/
 !**/src/test/**/build/
 
-### VS Code ###
-.vscode/
-
-.idea/
-.mvn/
-mvnw
-mvnw.cmd
-
+# ===== Docker =====
 /docker/*
 !/docker/postgres/init/
 !/docker/postgres/init/**
-.DS_Store
 
+# ===== OS / Misc =====
+.DS_Store
 uploads/
