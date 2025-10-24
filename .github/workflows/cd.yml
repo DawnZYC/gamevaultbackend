@@ -173,11 +173,112 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/v')
     environment:
       name: production
-      url: https://gamevault.example.com
+      url: https://${{ secrets.EC2_HOST }}:8080
+#      url: https://gamevault.example.com
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+
+      - name: Copy docker-compose.yml to EC2
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          source: "docker-compose.yml"
+          target: "~/gamevault"
+          overwrite: true
+
+      - name: Deploy to EC2 via SSH
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
+            set -e
+            
+            echo "=========================================="
+            echo "Starting Deployment"
+            echo "=========================================="
+            
+            # 切换到项目目录
+            cd ~/gamevault
+            
+            # 设置 DOCKERHUB_USERNAME 
+            export DOCKERHUB_USERNAME="${{ secrets.DOCKERHUB_USERNAME }}"
+            export IMAGE_TAG=latest
+            
+            # 加载 .env 文件（但不覆盖上面的环境变量）
+            if [ -f .env ]; then
+              set -a
+              . .env
+              set +a
+            fi
+            
+            # 显示配置（调试用）
+            echo "Using Docker Hub username: $DOCKERHUB_USERNAME"
+            echo "Using image tag: $IMAGE_TAG"
+            
+            # 拉取最新镜像
+            echo ""
+            echo "Pulling latest image..."
+            docker compose pull gamevault-backend
+            
+            # 停止旧容器
+            echo ""
+            echo "Stopping old container..."
+            docker compose stop gamevault-backend || true
+            docker compose rm -f gamevault-backend || true
+            
+            # 启动新容器
+            echo ""
+            echo "Starting new container..."
+            docker compose up -d gamevault-backend
+            
+            # 等待应用启动
+            echo ""
+            echo "Waiting for application to start..."
+            sleep 30
+            
+            # 健康检查
+            echo ""
+            echo "Health check..."
+            max_attempts=10
+            attempt=0
+            until curl -f http://localhost:8080/actuator/health || [ $attempt -eq $max_attempts ]; do
+              attempt=$((attempt + 1))
+              echo "  Attempt $attempt/$max_attempts..."
+              sleep 10
+            done
+            
+            if [ $attempt -eq $max_attempts ]; then
+              echo "Health check failed!"
+              echo "Container logs:"
+              docker compose logs --tail=50 backend
+              exit 1
+            fi
+            
+            echo ""
+            echo "Application is healthy!"
+            
+            # 显示容器状态
+            echo ""
+            echo "Container status:"
+            docker compose ps
+            
+            # 清理旧镜像
+            echo ""
+            echo "Cleaning up old images..."
+            docker image prune -f
+            
+            echo ""
+            echo "=========================================="
+            echo "Deployment Completed Successfully!"
+            echo "=========================================="
 
       - name: Deploy Notification
         run: |
