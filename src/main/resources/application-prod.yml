@@ -16,8 +16,8 @@ activation:
 
 # RSA 密钥配置
 rsa:
-  private-key: "file:/app/secrets/keys/rsa-private.pem"
-  public-key:  "file:/app/secrets/keys/rsa-public.pem"
+  private-key: "file:/home/ubuntu/gamevault/secrets/keys/rsa-private.pem"
+  public-key:  "file:/home/ubuntu/gamevault/secrets/keys/rsa-public.pem"
 
 spring:
   cloud:
