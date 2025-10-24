@@ -15,6 +15,11 @@ services:
       - ./docker/postgres/init:/docker-entrypoint-initdb.d
       - /etc/localtime:/etc/localtime:ro
     restart: unless-stopped
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U gamevault_user -d gamevault" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       - gamevault
 
@@ -29,6 +34,11 @@ services:
       - ./docker/redis/data/:/data
     command: redis-server /usr/local/etc/redis/redis.conf
     restart: always
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 3s
+      retries: 5
     networks:
       - gamevault
 
@@ -101,6 +111,47 @@ services:
 #      - ./secrets:/app/secrets   # 挂载本地 secrets 目录到容器的 /app/secrets
 #    networks:
 #      - gamevault
+
+
+  backend:
+    image: ${DOCKERHUB_USERNAME:-your_username}/gamevault-backend:${IMAGE_TAG:-latest}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: gamevault_backend
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    ports:
+      - "8080:8080"
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - SERVER_PORT=8080
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://postgres:5432/gamevault
+      - SPRING_DATASOURCE_USERNAME=gamevault_user
+      - SPRING_DATASOURCE_PASSWORD=gamevault_pass
+      - SPRING_DATA_REDIS_HOST=redis
+      - SPRING_DATA_REDIS_PORT=6379
+      - MINIO_ENDPOINT=http://minio:9000
+      - MINIO_ACCESS_KEY=minioadmin
+      - MINIO_SECRET_KEY=minioadmin123
+      - JAVA_OPTS=-Xmx1g -Xms512m
+    volumes:
+      - ./secrets:/app/secrets
+      - ./uploads:/app/uploads
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8080/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 90s
+    networks:
+      - gamevault
 
 networks:
   gamevault:
