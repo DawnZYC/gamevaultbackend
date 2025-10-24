@@ -1,0 +1,53 @@
+server:
+  port: 8080
+  tomcat:
+    max-swallow-size: 100MB
+    max-http-form-post-size: 100MB
+
+spring:
+  datasource:
+    # 生产环境数据库配置 - 请根据你的EC2数据库配置修改
+    url: jdbc:postgresql://localhost:5432/gamevault
+    username: gamevault_user
+    password: gamevault_pass
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+    show-sql: false  # 生产环境关闭SQL日志
+  data:
+    redis:
+      host: localhost
+      database: 0
+      port: 6379
+      timeout: 3000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: -1ms
+
+app:
+  asset-base-url: http://47.130.173.114:8080
+  asset-storage-path: game-assets
+
+# MinIO配置 - 请根据你的EC2 MinIO配置修改
+minio:
+  endpoint: http://localhost:9000
+  access-key: minioadmin
+  secret-key: minioadmin123
+  bucket-name: gamevault-chat
+  image-bucket: gamevault-images
+  video-bucket: gamevault-videos
+  file-bucket: gamevault-files
+  audio-bucket: gamevault-audios
+
+# 生产环境日志配置
+logging:
+  level:
+    com.sg.nusiss.gamevaultbackend: INFO
+    org.springframework.web: WARN
+    org.hibernate: WARN
