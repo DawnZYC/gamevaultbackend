@@ -86,6 +86,19 @@ auth:
 hashid:
   salt: "forum-backend-2024"
 
+# Actuator configuration for health checks
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+  health:
+    defaults:
+      enabled: true
+
 minio:
   endpoint: http://localhost:9000 # MinIO 服务地址
   access-key: minioadmin  # 访问密钥 (默认账号)

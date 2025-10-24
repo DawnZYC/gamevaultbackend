@@ -45,6 +45,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/auth/check-username").permitAll()
                         .requestMatchers("/api/auth/logout").permitAll()
                         .requestMatchers("/api/developer/devgameasset/download/**").permitAll()
+                        .requestMatchers("/actuator/health","/actuator/info").permitAll()  // 允许健康检查端点无需认证
                         .requestMatchers("/api/developer/**").authenticated()
                         .anyRequest().authenticated()
                 )
