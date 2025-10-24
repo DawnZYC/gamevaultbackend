@@ -36,6 +36,7 @@ public class SecurityConfig {
                         .requestMatchers("/api/forum/posts","/api/forum/posts/**").permitAll()  // 论坛帖子可以公开访问
                         .requestMatchers("/api/games/**").permitAll() // 允许公开访问游戏资源
                         .requestMatchers("/uploads/**").permitAll()  // 允许公开访问上传的文件（如头像）
+                        .requestMatchers("/assets/**").permitAll()  // 允许公开访问游戏资产文件（devgame图片、视频、zip）
                         .requestMatchers("/ws/**").permitAll()
                         .requestMatchers("/ws").permitAll()
                         .requestMatchers("/api/auth/login").permitAll()

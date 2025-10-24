@@ -10,6 +10,7 @@ import com.sg.nusiss.gamevaultbackend.repository.developer.DevGameAssetRepositor
 import com.sg.nusiss.gamevaultbackend.repository.developer.DevGameRepository;
 import com.sg.nusiss.gamevaultbackend.repository.developer.DevGameStatisticsRepository;
 import com.sg.nusiss.gamevaultbackend.repository.developer.DeveloperProfileRepository;
+import com.sg.nusiss.gamevaultbackend.util.developer.AssetUrlBuilder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -35,7 +36,9 @@ public class DevGameApplicationService {
     private final DevGameAssetRepository devGameAssetRepository;
     private final DeveloperProfileRepository developerProfileRepository;
     private final DevGameStatisticsRepository devGameStatisticsRepository;
+    private final AssetUrlBuilder assetUrlBuilder;
 
+    @Transactional
     public DevGameResponse uploadGame(DevGameUploadRequest request) {
         DeveloperProfile developer = developerProfileRepository.findById(request.getDeveloperId())
                 .orElseThrow(() -> new IllegalArgumentException("Developer profile not found"));
@@ -53,10 +56,20 @@ public class DevGameApplicationService {
         );
         devGameRepository.insert(game);
 
-        String imageUrl = saveAsset(developer.getUserId(), request.getName(), gameId, request.getImage(), "image");
-        String videoUrl = saveAsset(developer.getUserId(), request.getName(), gameId, request.getVideo(), "video");
-        String zipUrl   = saveAsset(developer.getUserId(), request.getName(), gameId, request.getZip(), "zip");
+        // Save assets and get their IDs
+        String imageAssetId = saveAsset(developer.getUserId(), request.getName(), gameId, request.getImage(), "image");
+        String videoAssetId = null;
+        String zipAssetId = saveAsset(developer.getUserId(), request.getName(), gameId, request.getZip(), "zip");
 
+        // Handle optional video file
+        if (request.getVideo() != null && !request.getVideo().isEmpty()) {
+            videoAssetId = saveAsset(developer.getUserId(), request.getName(), gameId, request.getVideo(), "video");
+        }
+
+        // Build download URLs
+        String imageUrl = assetUrlBuilder.buildDownloadUrl(imageAssetId);
+        String videoUrl = videoAssetId != null ? assetUrlBuilder.buildDownloadUrl(videoAssetId) : null;
+        String zipUrl = assetUrlBuilder.buildDownloadUrl(zipAssetId);
 
         developerProfileRepository.syncProjectCount(request.getDeveloperId());
 
@@ -68,6 +81,11 @@ public class DevGameApplicationService {
 
     private String saveAsset(String userId, String gameName, String gameId, MultipartFile file, String assetType) {
         try {
+            // 验证文件不为空
+            if (file == null || file.isEmpty()) {
+                throw new IllegalArgumentException("File is null or empty for asset type: " + assetType);
+            }
+            
             if (file.getSize() > MAX_FILE_SIZE_BYTES) {
                 throw new IllegalArgumentException("File exceeds maximum allowed size (200MB)");
             }
@@ -93,21 +111,46 @@ public class DevGameApplicationService {
 
             String safeUserId = sanitizePathSegment(userId);
 
-            String basePath = assetStoragePath.endsWith("/")
-                    ? assetStoragePath
-                    : assetStoragePath + "/";
+            // 确保使用绝对路径
+            String basePath;
+            if (assetStoragePath.startsWith("/") || assetStoragePath.contains(":")) {
+                // 已经是绝对路径
+                basePath = assetStoragePath.endsWith("/")
+                        ? assetStoragePath
+                        : assetStoragePath + "/";
+            } else {
+                // 相对路径，转换为绝对路径
+                String projectRoot = System.getProperty("user.dir");
+                basePath = projectRoot + "/" + assetStoragePath;
+                basePath = basePath.endsWith("/") ? basePath : basePath + "/";
+            }
             basePath = basePath + safeUserId + "/" + gameId + "/";
 
             Path folder = Paths.get(basePath);
             Files.createDirectories(folder);
 
             String fileName = file.getOriginalFilename();
+            if (fileName == null || fileName.trim().isEmpty()) {
+                throw new IllegalArgumentException("File name is null or empty");
+            }
+            
             String storagePath = basePath + fileName;
             File dest = new File(storagePath);
+            
+            // 确保父目录存在
+            dest.getParentFile().mkdirs();
+            
+            // 保存文件
             file.transferTo(dest);
+            
+            // 验证文件是否真的保存成功
+            if (!dest.exists() || dest.length() == 0) {
+                throw new RuntimeException("File was not saved successfully: " + storagePath);
+            }
 
+            String assetId = UUID.randomUUID().toString();
             DevGameAsset asset = new DevGameAsset(
-                    UUID.randomUUID().toString(),
+                    assetId,
                     gameId,
                     assetType,
                     fileName,
@@ -116,12 +159,17 @@ public class DevGameApplicationService {
                     file.getContentType(),
                     LocalDateTime.now()
             );
+            
+            // 保存到数据库
             devGameAssetRepository.insert(asset);
 
-            return "/assets/" + safeUserId + "/" + gameId + "/" + fileName;
+            // Return asset ID instead of relative path
+            return assetId;
 
         } catch (IOException e) {
             throw new RuntimeException("Failed to save asset: " + assetType, e);
+        } catch (Exception e) {
+            throw new RuntimeException("Unexpected error saving asset: " + assetType, e);
         }
     }
 
@@ -169,11 +217,12 @@ public class DevGameApplicationService {
 
     @Transactional
     public DevGameResponse updateGame(
+            String userId,
             String gameId,
             String name,
             String description,
             String releaseDate,
-            String date, MultipartFile image,
+            MultipartFile image,
             MultipartFile video,
             MultipartFile zip
     ) {
@@ -184,7 +233,10 @@ public class DevGameApplicationService {
                 .findById(game.getDeveloperProfileId())
                 .orElseThrow(() -> new IllegalArgumentException("Developer profile not found for this game"));
 
-        String userId = profile.getUserId();
+        // Verify that the user has permission to update this game
+        if (!profile.getUserId().equals(userId)) {
+            throw new IllegalArgumentException("You don't have permission to update this game");
+        }
 
         game.setName(name);
         game.setDescription(description);
@@ -204,13 +256,16 @@ public class DevGameApplicationService {
         String zipUrl = null;
 
         if (image != null && !image.isEmpty()) {
-            imageUrl = saveAsset(userId, game.getName(), gameId, image, "image");
+            String assetId = saveAsset(userId, game.getName(), gameId, image, "image");
+            imageUrl = assetUrlBuilder.buildDownloadUrl(assetId);
         }
         if (video != null && !video.isEmpty()) {
-            videoUrl = saveAsset(userId, game.getName(), gameId, video, "video");
+            String assetId = saveAsset(userId, game.getName(), gameId, video, "video");
+            videoUrl = assetUrlBuilder.buildDownloadUrl(assetId);
         }
         if (zip != null && !zip.isEmpty()) {
-            zipUrl = saveAsset(userId, game.getName(), gameId, zip, "zip");
+            String assetId = saveAsset(userId, game.getName(), gameId, zip, "zip");
+            zipUrl = assetUrlBuilder.buildDownloadUrl(assetId);
         }
 
         return new DevGameResponse(

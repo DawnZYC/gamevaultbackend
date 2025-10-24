@@ -32,3 +32,4 @@ build/
 # ===== OS / Misc =====
 .DS_Store
 uploads/
+game-assets/

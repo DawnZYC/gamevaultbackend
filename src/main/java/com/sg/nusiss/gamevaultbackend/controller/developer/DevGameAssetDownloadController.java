@@ -10,8 +10,6 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 
 import java.io.File;
@@ -44,8 +42,13 @@ public class DevGameAssetDownloadController extends AuthenticatedControllerBase 
 
         // 3️⃣ 返回文件流
         Resource resource = new FileSystemResource(file);
+        
+        // 修复文件名编码问题 - 使用URL编码处理特殊字符
+        String encodedFileName = java.net.URLEncoder.encode(asset.getFileName(), java.nio.charset.StandardCharsets.UTF_8)
+                .replaceAll("\\+", "%20"); // 将+号替换为%20，符合URL编码标准
+        
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + asset.getFileName() + "\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION, "inline; filename=\"" + encodedFileName + "\"")
                 .contentType(MediaType.parseMediaType(asset.getMimeType()))
                 .body(resource);
     }

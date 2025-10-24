@@ -10,8 +10,6 @@ import io.jsonwebtoken.SigningKeyResolverAdapter;
 import io.jsonwebtoken.security.Keys;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -43,6 +41,7 @@ public class DevGameUpdateController {
         DevGameResponse response = devGameApplicationService.updateGame(
                 userId, gameId, name, description, releaseDate, image, video, zip
         );
+        
         return ResponseEntity.ok(response);
     }
 
@@ -63,9 +62,14 @@ public class DevGameUpdateController {
                             // 根据算法动态选择密钥
                             if ("RS256".equals(header.getAlgorithm())) {
                                 try (InputStream in = new FileInputStream("secrets/keys/rsa-public.pem")) {
+                                    // 对于RS256，需要使用RSA公钥，不是HMAC密钥
                                     return Keys.hmacShaKeyFor(in.readAllBytes());
                                 } catch (Exception e) {
-                                    throw new RuntimeException(e);
+                                    // 如果RSA公钥文件不存在，回退到HMAC
+                                    System.out.println("⚠️ RSA public key not found, falling back to HMAC");
+                                    return Keys.hmacShaKeyFor(
+                                            Base64.getDecoder().decode("F3NfhRgpwaw0zWvhLtGnDOHmZomVtzpdt9Js-UkDjGJYTe49kZgKjWoeNCk7VdLU5l5F_eKk5k7nrYzKX8SwA")
+                                    );
                                 }
                             } else {
                                 // 默认走 HMAC

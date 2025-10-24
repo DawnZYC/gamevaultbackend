@@ -32,7 +32,7 @@ public class DevGameUploadController extends AuthenticatedControllerBase {
             @RequestParam("description") String description,
             @RequestParam("releaseDate") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime releaseDate,
             @RequestPart("image") MultipartFile imageFile,
-            @RequestPart("video") MultipartFile videoFile,
+            @RequestPart(value = "video", required = false) MultipartFile videoFile,
             @RequestPart("zip") MultipartFile zipFile
     ) {
         String userId = extractUserId(jwt);
