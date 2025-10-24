@@ -211,13 +211,7 @@ jobs:
             # 设置 DOCKERHUB_USERNAME 
             export DOCKERHUB_USERNAME="${{ secrets.DOCKERHUB_USERNAME }}"
             export IMAGE_TAG=latest
-            
-            # 加载 .env 文件（但不覆盖上面的环境变量）
-            if [ -f .env ]; then
-              set -a
-              . .env
-              set +a
-            fi
+          
             
             # 显示配置（调试用）
             echo "Using Docker Hub username: $DOCKERHUB_USERNAME"
@@ -226,18 +220,18 @@ jobs:
             # 拉取最新镜像
             echo ""
             echo "Pulling latest image..."
-            docker compose pull gamevault-backend
+            docker compose pull backend
             
             # 停止旧容器
             echo ""
             echo "Stopping old container..."
-            docker compose stop gamevault-backend || true
-            docker compose rm -f gamevault-backend || true
+            docker compose stop backend || true
+            docker compose rm -f backend || true
             
             # 启动新容器
             echo ""
             echo "Starting new container..."
-            docker compose up -d gamevault-backend
+            docker compose up -d backend
             
             # 等待应用启动
             echo ""

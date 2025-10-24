@@ -11,7 +11,7 @@ echo "Running OWASP ZAP DAST Scan..."
 echo "=========================================="
 
 # Default target URL
-TARGET_URL="${ZAP_TARGET_URL:-http://localhost:8080}"
+TARGET_URL="${ZAP_TARGET_URL:-http://47.130.173.114:8080}"
 
 echo "Target URL: $TARGET_URL"
 echo "Waiting for application to be ready..."
