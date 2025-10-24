@@ -35,8 +35,8 @@ spring:
   jpa.hibernate.naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
   servlet:
     multipart:
-      max-file-size: 100MB
-      max-request-size: 100MB
+      max-file-size: 1000MB
+      max-request-size: 1000MB
       enabled: true
 
   data:
@@ -64,21 +64,18 @@ app:
   pagination:
     default-page-size: 20
     max-page-size: 100
+  asset-base-url: http://localhost:8080
+  asset-storage-path: game-assets
 
 # MyBatis configuration for forum functionality
 mybatis:
-  mapper-locations: classpath:mapper/forum/*.xml
+  mapper-locations: classpath:mapper/**/*.xml
   type-aliases-package: com.sg.nusiss.gamevaultbackend.entity.forum
   configuration:
     map-underscore-to-camel-case: true
     log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
     lazy-loading-enabled: true
     aggressive-lazy-loading: false
-
-# JWT configuration for forum functionality
-jwt:
-  secret: "1TuQdaZEWG0U7EiIkrGX1xvbaCJDT7XAsksekHxxFgE="
-  expiration: 864000000
 
 # Auth configuration
 auth:

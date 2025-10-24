@@ -1,18 +1,22 @@
 package com.sg.nusiss.gamevaultbackend.util.forum;
 
-import io.jsonwebtoken.*;
-import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.oauth2.jose.jws.SignatureAlgorithm;
 import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.security.oauth2.jwt.JwtClaimsSet;
 import org.springframework.security.oauth2.jwt.JwtDecoder;
+import org.springframework.security.oauth2.jwt.JwtEncoder;
+import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
+import org.springframework.security.oauth2.jwt.JwsHeader;
 import org.springframework.stereotype.Component;
 
-import javax.crypto.SecretKey;
-import java.nio.charset.StandardCharsets;
-import java.util.Date;
+import java.time.Instant;
+import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -23,8 +27,14 @@ public class ForumJwtUtil {
     @Autowired
     private JwtDecoder jwtDecoder; // 使用gamevaultbackend的RS256 JwtDecoder
 
+    @Autowired
+    private JwtEncoder jwtEncoder; // 使用gamevaultbackend的RS256 JwtEncoder
+
     @Value("${auth.mock.enabled:false}")
     private boolean mockEnabled;
+
+    @Value("${app.jwt.expiration-minutes:120}")
+    private long expirationMinutes;
 
     // 预定义的测试 Token 映射
     private static final Map<String, MockUser> MOCK_TOKENS = new HashMap<>() {{
@@ -51,10 +61,28 @@ public class ForumJwtUtil {
 
     // 生成 JWT Token（使用RS256算法，与gamevaultbackend统一）
     public String generateToken(Long userId, String username) {
-        // 注意：这里应该使用gamevaultbackend的JwtEncoder
-        // 但由于ForumJwtUtil主要用于解析，生成token建议使用gamevaultbackend的认证系统
-        logger.warn("ForumJwtUtil.generateToken() 被调用，建议使用gamevaultbackend的认证系统生成token");
-        return null;
+        return generateToken(userId, username, null);
+    }
+
+    // 生成 JWT Token（完整版本，支持email）
+    public String generateToken(Long userId, String username, String email) {
+        Instant now = Instant.now();
+
+        JwtClaimsSet.Builder builder = JwtClaimsSet.builder()
+                .issuer("gamevault-auth")
+                .issuedAt(now)
+                .expiresAt(now.plus(expirationMinutes, ChronoUnit.MINUTES))
+                .subject(username);              // sub = username
+
+        if (userId != null) builder.claim("uid", userId);
+        if (email != null) builder.claim("email", email);
+
+        JwsHeader header = JwsHeader.with(SignatureAlgorithm.RS256).build();
+        String token = jwtEncoder.encode(JwtEncoderParameters.from(header, builder.build()))
+                .getTokenValue();
+        
+        logger.debug("论坛系统生成JWT token: userId={}, username={}", userId, username);
+        return token;
     }
 
     // 验证并解析 Token

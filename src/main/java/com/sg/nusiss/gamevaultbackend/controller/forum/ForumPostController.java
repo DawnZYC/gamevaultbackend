@@ -674,10 +674,12 @@ public class ForumPostController {
      * GET /api/forum/posts/{postId}/replies
      */
     @GetMapping("/{postId}/replies")
+    @RequireForumAuth(required = false) // 🔥 添加认证，但允许未登录用户访问
     public ResponseEntity<?> getReplies(
             @PathVariable Long postId,
             @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "20") int size) {
+            @RequestParam(defaultValue = "20") int size,
+            HttpServletRequest request) {
 
         logger.info("获取回复列表 - 帖子ID: {}, 页码: {}, 每页: {}", postId, page, size);
 
@@ -686,10 +688,19 @@ public class ForumPostController {
             List<ForumContent> replies = postService.getRepliesByPostId(postId, page, size);
             int totalCount = postService.getReplyCountByPostId(postId);
 
-            // 为每个回复添加作者信息
+            // 获取当前用户ID（可能为null，表示未登录）
+            Long currentUserId = (Long) request.getAttribute("userId");
+
+            // 为每个回复添加作者信息和点赞状态
             List<Map<String, Object>> replyDTOs = new ArrayList<>();
             for (ForumContent reply : replies) {
                 ForumUser author = getUserSafely(reply.getAuthorId());
+
+                // 检查当前用户是否已点赞该回复
+                boolean isLiked = false;
+                if (currentUserId != null) {
+                    isLiked = contentLikeService.isLiked(reply.getContentId(), currentUserId);
+                }
 
                 Map<String, Object> dto = new HashMap<>();
                 dto.put("replyId", reply.getContentId());
@@ -700,6 +711,7 @@ public class ForumPostController {
                 dto.put("authorNickname", author != null ? author.getNickname() : null);
                 dto.put("authorAvatarUrl", author != null ? author.getAvatarUrl() : null);
                 dto.put("likeCount", reply.getLikeCount() != null ? reply.getLikeCount() : 0);
+                dto.put("isLiked", isLiked); // 🔥 添加点赞状态
                 dto.put("createdDate", reply.getCreatedDate());
                 dto.put("updatedDate", reply.getUpdatedDate());
 
@@ -758,6 +770,149 @@ public class ForumPostController {
         } catch (Exception e) {
             logger.error("删除回复失败", e);
             return createErrorResponse("删除回复失败", e.getMessage());
+        }
+    }
+
+    /**
+     * 点赞回复
+     * POST /api/forum/posts/{postId}/replies/{replyId}/like
+     */
+    @PostMapping("/{postId}/replies/{replyId}/like")
+    @RequireForumAuth
+    public ResponseEntity<?> likeReply(
+            @PathVariable Long postId,
+            @PathVariable Long replyId,
+            HttpServletRequest request) {
+
+        Long userId = (Long) request.getAttribute("userId");
+        logger.info("点赞回复 - 帖子ID: {}, 回复ID: {}, 用户ID: {}", postId, replyId, userId);
+
+        try {
+            if (userId == null) {
+                return createErrorResponse("需要登录", "请先登录再点赞", HttpStatus.UNAUTHORIZED);
+            }
+
+            boolean success = contentLikeService.likeContent(replyId, userId);
+
+            if (success) {
+                Map<String, Object> response = new HashMap<>();
+                response.put("success", true);
+                response.put("message", "点赞成功");
+                response.put("liked", true);
+                response.put("likeCount", contentLikeService.getLikeCount(replyId));
+
+                logger.info("回复点赞成功 - 回复ID: {}, 用户ID: {}", replyId, userId);
+                return ResponseEntity.ok(response);
+            } else {
+                Map<String, Object> response = new HashMap<>();
+                response.put("success", false);
+                response.put("message", "已经点赞过该回复");
+                response.put("liked", true);
+                response.put("likeCount", contentLikeService.getLikeCount(replyId));
+
+                logger.info("重复点赞回复 - 回复ID: {}, 用户ID: {}", replyId, userId);
+                return ResponseEntity.ok(response);
+            }
+
+        } catch (IllegalArgumentException e) {
+            logger.warn("参数错误: {}", e.getMessage());
+            return createErrorResponse("参数错误", e.getMessage(), HttpStatus.BAD_REQUEST);
+
+        } catch (Exception e) {
+            logger.error("点赞回复失败", e);
+            return createErrorResponse("点赞回复失败", e.getMessage());
+        }
+    }
+
+    /**
+     * 取消点赞回复
+     * DELETE /api/forum/posts/{postId}/replies/{replyId}/like
+     */
+    @DeleteMapping("/{postId}/replies/{replyId}/like")
+    @RequireForumAuth
+    public ResponseEntity<?> unlikeReply(
+            @PathVariable Long postId,
+            @PathVariable Long replyId,
+            HttpServletRequest request) {
+
+        Long userId = (Long) request.getAttribute("userId");
+        logger.info("取消点赞回复 - 帖子ID: {}, 回复ID: {}, 用户ID: {}", postId, replyId, userId);
+
+        try {
+            if (userId == null) {
+                return createErrorResponse("需要登录", "请先登录", HttpStatus.UNAUTHORIZED);
+            }
+
+            boolean success = contentLikeService.unlikeContent(replyId, userId);
+
+            if (success) {
+                Map<String, Object> response = new HashMap<>();
+                response.put("success", true);
+                response.put("message", "取消点赞成功");
+                response.put("liked", false);
+                response.put("likeCount", contentLikeService.getLikeCount(replyId));
+
+                logger.info("取消点赞回复成功 - 回复ID: {}, 用户ID: {}", replyId, userId);
+                return ResponseEntity.ok(response);
+            } else {
+                Map<String, Object> response = new HashMap<>();
+                response.put("success", false);
+                response.put("message", "未点赞过该回复");
+                response.put("liked", false);
+                response.put("likeCount", contentLikeService.getLikeCount(replyId));
+
+                return ResponseEntity.ok(response);
+            }
+
+        } catch (IllegalArgumentException e) {
+            logger.warn("参数错误: {}", e.getMessage());
+            return createErrorResponse("参数错误", e.getMessage(), HttpStatus.BAD_REQUEST);
+
+        } catch (Exception e) {
+            logger.error("取消点赞回复失败", e);
+            return createErrorResponse("取消点赞回复失败", e.getMessage());
+        }
+    }
+
+    /**
+     * 切换回复点赞状态
+     * PUT /api/forum/posts/{postId}/replies/{replyId}/like/toggle
+     */
+    @PutMapping("/{postId}/replies/{replyId}/like/toggle")
+    @RequireForumAuth
+    public ResponseEntity<?> toggleReplyLike(
+            @PathVariable Long postId,
+            @PathVariable Long replyId,
+            HttpServletRequest request) {
+
+        Long userId = (Long) request.getAttribute("userId");
+        logger.info("切换回复点赞状态 - 帖子ID: {}, 回复ID: {}, 用户ID: {}", postId, replyId, userId);
+
+        try {
+            if (userId == null) {
+                return createErrorResponse("需要登录", "请先登录再点赞", HttpStatus.UNAUTHORIZED);
+            }
+
+            // 切换点赞状态
+            boolean liked = contentLikeService.toggleLike(replyId, userId);
+            int likeCount = contentLikeService.getLikeCount(replyId);
+
+            Map<String, Object> response = new HashMap<>();
+            response.put("success", true);
+            response.put("message", liked ? "点赞成功" : "取消点赞成功");
+            response.put("liked", liked);
+            response.put("likeCount", likeCount);
+
+            logger.info("回复点赞操作成功 - 回复ID: {}, 用户ID: {}, 状态: {}", replyId, userId, liked ? "已点赞" : "已取消");
+            return ResponseEntity.ok(response);
+
+        } catch (IllegalArgumentException e) {
+            logger.warn("参数错误: {}", e.getMessage());
+            return createErrorResponse("参数错误", e.getMessage(), HttpStatus.BAD_REQUEST);
+
+        } catch (Exception e) {
+            logger.error("切换回复点赞失败", e);
+            return createErrorResponse("操作失败", e.getMessage());
         }
     }
 

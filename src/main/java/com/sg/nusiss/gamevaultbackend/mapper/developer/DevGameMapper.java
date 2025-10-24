@@ -1,0 +1,41 @@
+package com.sg.nusiss.gamevaultbackend.mapper.developer;
+
+import com.sg.nusiss.gamevaultbackend.entity.developer.DevGame;
+import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
+
+import java.util.List;
+
+@Mapper
+public interface DevGameMapper {
+    int insert(DevGame devGame);
+
+    /**
+     * selected game ById
+     * param: id
+     * return: game object
+     */
+    DevGame selectById(String id);
+
+    /**
+     * select game by developer id
+     * param: developerProfileId
+     * return: List of all game
+     */
+    List<DevGame> selectByDeveloperProfileId(@Param("developerProfileId") String developerProfileId);
+
+    @Select("SELECT COUNT(*) FROM dev_game WHERE developer_profile_id = #{developerId}")
+    int countByDeveloperId(@Param("developerId") String developerId);
+
+    @Select("SELECT COUNT(*) FROM dev_game WHERE id = #{id}")
+    Integer countById(@Param("id") String id);
+
+    int update(DevGame devGame);
+
+    int deleteById(String id);
+
+    List<DevGame> findAllPaged(@Param("offset") int offset, @Param("pageSize") int pageSize);
+
+    long countAll();
+}
