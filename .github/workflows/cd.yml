@@ -173,7 +173,7 @@ jobs:
     if: startsWith(github.ref, 'refs/tags/v')
     environment:
       name: production
-      url: https://${{ secrets.EC2_HOST }}:8080
+      url: https://47.130.173.114:8080
 #      url: https://gamevault.example.com
 
     steps:
