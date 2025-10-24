@@ -105,12 +105,14 @@ public class OrderService {
         }
     }
 
+    @Transactional(readOnly = true)
     public Optional<OrderDTO> findById(Long orderId) {
         return orderRepository.findById(orderId).map(this::convertToDTO);
     }
 
+    @Transactional(readOnly = true)
     public List<OrderDTO> findByUserId(Long userId) {
-        return orderRepository.findByUserIdOrderByOrderIdDesc(userId).stream()
+        return orderRepository.findOrdersWithItems(userId).stream()
                 .map(this::convertToDTO)
                 .toList();
     }

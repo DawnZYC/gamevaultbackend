@@ -241,12 +241,12 @@ jobs:
             # 健康检查
             echo ""
             echo "Health check..."
-            max_attempts=10
+            max_attempts=2
             attempt=0
             until curl -f http://localhost:8080/actuator/health || [ $attempt -eq $max_attempts ]; do
               attempt=$((attempt + 1))
               echo "  Attempt $attempt/$max_attempts..."
-              sleep 10
+              sleep 5
             done
             
             if [ $attempt -eq $max_attempts ]; then
