@@ -9,14 +9,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 import com.sg.nusiss.gamevaultbackend.annotation.forum.RequireForumAuth;
-import com.sg.nusiss.gamevaultbackend.util.forum.ForumJwtUtil;
+import com.sg.nusiss.gamevaultbackend.security.auth.JwtUtil;
 
 @Component
 public class ForumAuthInterceptor implements HandlerInterceptor {
     private static final Logger logger = LoggerFactory.getLogger(ForumAuthInterceptor.class);
 
     @Autowired
-    private ForumJwtUtil jwtUtil;
+    private JwtUtil jwtUtil;
 
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response,
@@ -50,7 +50,7 @@ public class ForumAuthInterceptor implements HandlerInterceptor {
         // 验证 Token
         if (token != null) {
             try {
-                ForumJwtUtil.TokenInfo tokenInfo = jwtUtil.validateAndParseToken(token);
+                JwtUtil.TokenInfo tokenInfo = jwtUtil.validateAndParseToken(token);
                 if (tokenInfo.valid) {
                     // 将用户信息设置到 request 属性中
                     request.setAttribute("userId", tokenInfo.userId);

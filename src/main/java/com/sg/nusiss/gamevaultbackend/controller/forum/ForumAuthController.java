@@ -9,7 +9,7 @@ import com.sg.nusiss.gamevaultbackend.entity.forum.ForumAccount;
 import com.sg.nusiss.gamevaultbackend.entity.forum.ForumUser;
 import com.sg.nusiss.gamevaultbackend.service.forum.ForumAuthService;
 
-import com.sg.nusiss.gamevaultbackend.util.forum.ForumJwtUtil;
+import com.sg.nusiss.gamevaultbackend.security.auth.JwtUtil;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +26,7 @@ public class ForumAuthController {
     private ForumAuthService authService;
 
     @Autowired
-    private ForumJwtUtil jwtUtil;
+    private JwtUtil jwtUtil;
 
     /**
      * 注册
@@ -50,7 +50,7 @@ public class ForumAuthController {
             ForumAccount account = authService.register(username.trim(), password);
 
             // 生成token
-            String token = jwtUtil.generateToken(account.getUserId(), account.getUsername());
+            String token = jwtUtil.generateToken(account.getUserId(), account.getUsername(), null);
 
             Map<String, Object> response = new HashMap<>();
             response.put("token", token);
@@ -93,7 +93,7 @@ public class ForumAuthController {
             }
 
             // 生成token
-            String token = jwtUtil.generateToken(account.getUserId(), account.getUsername());
+            String token = jwtUtil.generateToken(account.getUserId(), account.getUsername(), null);
 
             Map<String, Object> response = new HashMap<>();
             response.put("token", token);
