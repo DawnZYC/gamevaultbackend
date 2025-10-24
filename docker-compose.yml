@@ -78,7 +78,7 @@ services:
       /bin/sh -c "
       echo 'Waiting for MinIO...';
       sleep 5;
-      mc alias set myminio http://minio:9000 minioadmin minioadmin123;
+      mc alias set myminio http://47.130.173.114:9000 minioadmin minioadmin123;
       mc mb --ignore-existing myminio/gamevault-images;
       mc mb --ignore-existing myminio/gamevault-videos;
       mc mb --ignore-existing myminio/gamevault-files;
@@ -136,7 +136,7 @@ services:
       - SPRING_DATASOURCE_PASSWORD=gamevault_pass
       - SPRING_DATA_REDIS_HOST=redis
       - SPRING_DATA_REDIS_PORT=6379
-      - MINIO_ENDPOINT=http://minio:9000
+      - MINIO_ENDPOINT=http://47.130.173.114:9000
       - MINIO_ACCESS_KEY=minioadmin
       - MINIO_SECRET_KEY=minioadmin123
       - JAVA_OPTS=-Xmx1g -Xms512m

@@ -102,6 +102,9 @@ app:
     default-page-size: 20
     max-page-size: 100
 
+  asset-base-url: ${ASSET_BASE_URL:http://47.130.173.114:8080}
+  asset-storage-path: ${ASSET_STORAGE_PATH:game-assets}
+
 # MyBatis 配置
 mybatis:
   mapper-locations: classpath:mapper/**/*.xml
