@@ -146,4 +146,15 @@ public class GameService {
         game.setImageUrl(dto.getImageUrl());
         return game;
     }
+
+    /**
+     * 删除游戏
+     */
+    @Transactional
+    public void deleteGame(Long gameId) {
+        if (!repo.existsById(gameId)) {
+            throw new RuntimeException("Game not found with id: " + gameId);
+        }
+        repo.deleteById(gameId);
+    }
 }

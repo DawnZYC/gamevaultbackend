@@ -79,14 +79,14 @@ public class SecurityConfig {
                 "http://localhost:3000",
                 "http://127.0.0.1:3000",
                 "http://localhost:3001",
-                "http://127.0.0.1:3001",
-                "http://47.130.173.114:3000",  // 添加你的EC2前端地址
-                "https://47.130.173.114:3000"
+                "http://127.0.0.1:3001"
         ));
         configuration.setAllowedMethods(Arrays.asList(
                 "GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"
         ));
-        configuration.setAllowedHeaders(Arrays.asList("*"));  // 允许所有请求头
+        configuration.setAllowedHeaders(Arrays.asList(
+                "Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin"
+        ));
         configuration.setAllowCredentials(true);
         configuration.setMaxAge(3600L);
 

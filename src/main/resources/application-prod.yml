@@ -1,53 +1,210 @@
 server:
-  port: 8080
+  port: ${SERVER_PORT:8080}
   tomcat:
     max-swallow-size: 100MB
     max-http-form-post-size: 100MB
+  # 生产环境关闭错误详情显示
+  error:
+    include-message: never
+    include-binding-errors: never
+    include-stacktrace: never
+    include-exception: false
+
+activation:
+  stock:
+    target: ${ACTIVATION_STOCK_TARGET:30}
+
+# RSA 密钥配置
+rsa:
+  private-key: "file:/app/secrets/keys/rsa-private.pem"
+  public-key:  "file:/app/secrets/keys/rsa-public.pem"
 
 spring:
+  cloud:
+    compatibility-verifier:
+      enabled: false
+  
+  # OAuth2 配置
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          public-key-location: ${rsa.public-key}
+  
+  # 数据源配置 - 使用环境变量
   datasource:
-    # 生产环境数据库配置 - 请根据你的EC2数据库配置修改
-    url: jdbc:postgresql://localhost:5432/gamevault
-    username: gamevault_user
-    password: gamevault_pass
+    url: jdbc:postgresql://${POSTGRES_HOST:postgres}:${POSTGRES_PORT:5432}/${POSTGRES_DB:gamevault}
+    username: ${POSTGRES_USER:gamevault_user}
+    password: ${POSTGRES_PASSWORD:gamevault_pass}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 20
+      minimum-idle: 5
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+  
+  # JPA 配置 - 生产环境优化
   jpa:
     hibernate:
-      ddl-auto: update
+      ddl-auto: update  # 生产环境建议使用 validate 或 none
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
-    show-sql: false  # 生产环境关闭SQL日志
+        format_sql: false
+        use_sql_comments: false
+        jdbc:
+          batch_size: 20
+        order_inserts: true
+        order_updates: true
+    show-sql: false  # 生产环境关闭 SQL 日志
+    open-in-view: false
+  
+  jpa.hibernate.naming.physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
+  
+  # 文件上传配置
+  servlet:
+    multipart:
+      max-file-size: ${UPLOAD_MAX_FILE_SIZE:100MB}
+      max-request-size: ${UPLOAD_MAX_REQUEST_SIZE:100MB}
+      enabled: true
+      location: ${java.io.tmpdir}
+
+  # Redis 配置 - 使用环境变量
   data:
     redis:
-      host: localhost
-      database: 0
-      port: 6379
+      host: ${REDIS_HOST:redis}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      database: ${REDIS_DATABASE:0}
       timeout: 3000ms
       lettuce:
         pool:
-          max-active: 8
-          max-idle: 8
-          min-idle: 0
+          max-active: 20
+          max-idle: 10
+          min-idle: 5
           max-wait: -1ms
+        shutdown-timeout: 100ms
 
+# 应用配置
 app:
-  asset-base-url: http://47.130.173.114:8080
-  asset-storage-path: game-assets
+  jwt:
+    # JWT 使用 RSA 公私钥,不使用对称密钥
+    # 密钥通过 rsa.private-key 和 rsa.public-key 配置
+    expiration-minutes: ${JWT_EXPIRATION_MINUTES:120}
+  
+  upload:
+    path: ${UPLOAD_PATH:/app/uploads}
+    max-file-size: ${UPLOAD_MAX_FILE_SIZE:100MB}
+    max-request-size: ${UPLOAD_MAX_REQUEST_SIZE:100MB}
+  
+  pagination:
+    default-page-size: 20
+    max-page-size: 100
 
-# MinIO配置 - 请根据你的EC2 MinIO配置修改
+# MyBatis 配置
+mybatis:
+  mapper-locations: classpath:mapper/forum/*.xml
+  type-aliases-package: com.sg.nusiss.gamevaultbackend.entity.forum
+  configuration:
+    map-underscore-to-camel-case: true
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl  # 使用 SLF4J 日志
+    lazy-loading-enabled: true
+    aggressive-lazy-loading: false
+    cache-enabled: true
+
+# 论坛模块 JWT 配置
+jwt:
+  secret: ${FORUM_JWT_SECRET:1TuQdaZEWG0U7EiIkrGX1xvbaCJDT7XAsksekHxxFgE=}
+  expiration: ${FORUM_JWT_EXPIRATION:864000000}
+
+# Auth 配置 - 生产环境关闭 mock
+auth:
+  mock:
+    enabled: false
+
+# HashId 配置
+hashid:
+  salt: ${HASHID_SALT:forum-backend-2024}
+
+# MinIO 配置 - 使用环境变量
 minio:
-  endpoint: http://localhost:9000
-  access-key: minioadmin
-  secret-key: minioadmin123
-  bucket-name: gamevault-chat
-  image-bucket: gamevault-images
-  video-bucket: gamevault-videos
-  file-bucket: gamevault-files
-  audio-bucket: gamevault-audios
+  endpoint: ${MINIO_ENDPOINT:http://minio:9000}
+  access-key: ${MINIO_ACCESS_KEY:minioadmin}
+  secret-key: ${MINIO_SECRET_KEY:minioadmin123}
+  bucket-name: ${MINIO_BUCKET_CHAT:gamevault-chat}
+  image-bucket: ${MINIO_BUCKET_IMAGES:gamevault-images}
+  video-bucket: ${MINIO_BUCKET_VIDEOS:gamevault-videos}
+  file-bucket: ${MINIO_BUCKET_FILES:gamevault-files}
+  audio-bucket: ${MINIO_BUCKET_AUDIOS:gamevault-audios}
 
-# 生产环境日志配置
+# 文件上传详细配置
+file:
+  upload:
+    temp-path: ${java.io.tmpdir}/gamevault-uploads
+    image:
+      max-size: 10485760  # 10MB
+      allowed-types: jpg,jpeg,png,gif,webp,bmp,svg
+      generate-thumbnail: true
+      thumbnail-width: 200
+      thumbnail-height: 200
+    video:
+      max-size: 524288000  # 500MB
+      allowed-types: mp4,avi,mov,wmv,flv,mkv,webm,m4v
+      generate-cover: true
+    document:
+      max-size: 20971520  # 20MB
+      allowed-types: pdf,doc,docx,xls,xlsx,ppt,pptx,txt,zip,rar,7z
+    audio:
+      max-size: 52428800  # 50MB
+      allowed-types: mp3,wav,aac,flac,ogg,m4a,wma
+    chunk:
+      size: 5242880  # 5MB
+      min-file-size: 10485760  # 10MB
+      task-expire-hours: 24
+    presigned:
+      upload-expire-minutes: 60
+      download-expire-hours: 24
+    quick-upload:
+      enabled: true
+    concurrent:
+      max-uploads-per-user: 5
+
+# 日志配置 - 生产环境
 logging:
   level:
+    root: INFO
     com.sg.nusiss.gamevaultbackend: INFO
-    org.springframework.web: WARN
+    org.springframework.web: INFO
     org.hibernate: WARN
+    org.hibernate.SQL: WARN
+    org.springframework.security: INFO
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: /app/logs/gamevault-backend.log
+    max-size: 10MB
+    max-history: 30
+
+# Actuator 配置 - 生产环境安全配置
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+      base-path: /actuator
+  endpoint:
+    health:
+      show-details: when-authorized
+      probes:
+        enabled: true
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  health:
+    livenessstate:
+      enabled: true
+    readinessstate:
+      enabled: true

@@ -59,4 +59,11 @@ public class GameController {
         GameDTO updated = service.updateGame(id, game);
         return ResponseEntity.ok(updated);
     }
+
+    /** 🗑️ 删除游戏（⚠️ 仅管理员使用） */
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.deleteGame(id);
+        return ResponseEntity.noContent().build();
+    }
 }
