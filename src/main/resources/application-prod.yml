@@ -47,7 +47,9 @@ spring:
   # JPA 配置 - 生产环境优化
   jpa:
     hibernate:
-      ddl-auto: update  # 生产环境建议使用 validate 或 none
+      ddl-auto: validate  # 生产环境建议使用 validate 或 none
+
+
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQLDialect
