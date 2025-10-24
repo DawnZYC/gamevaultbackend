@@ -28,6 +28,11 @@ services:
       - ./docker/redis/data/:/data
     command: redis-server /usr/local/etc/redis/redis.conf
     restart: always
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 3s
+      retries: 5
     networks:
       - gamevault
 
