@@ -187,7 +187,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
-          source: "docker-compose.yml"
+          source: "docker-compose.yml,docker/,secrets/"
           target: "~/gamevault"
           overwrite: true
 
@@ -211,32 +211,54 @@ jobs:
             # 设置 DOCKERHUB_USERNAME 
             export DOCKERHUB_USERNAME="${{ secrets.DOCKERHUB_USERNAME }}"
             export IMAGE_TAG=latest
-          
             
-            # 显示配置（调试用）
-            echo "Using Docker Hub username: $DOCKERHUB_USERNAME"
-            echo "Using image tag: $IMAGE_TAG"
+            # ============================================
+            # 判断是否首次部署
+            # ============================================
+            if [ ! -d "./docker/postgres/data" ] || [ ! "$(ls -A ./docker/postgres/data 2>/dev/null)" ]; then
+            echo "🆕 First time deployment detected"
+            FIRST_DEPLOY=true
+            else
+            echo "🔄 Update deployment detected"
+            FIRST_DEPLOY=false
+            fi
             
-            # 拉取最新镜像
+            # ============================================
+            # 首次部署: 完全重建
+            # ============================================
+            if [ "$FIRST_DEPLOY" = true ]; then
             echo ""
-            echo "Pulling latest image..."
+            echo "Performing full deployment..."
+            docker compose down -v
+            docker compose pull
+            docker compose up -d
+            sleep 45
+            
+            # ============================================
+            # 更新部署: 只更新 backend
+            # ============================================
+            else
+            echo ""
+            echo "Performing backend update only..."
+            
+            # 拉取最新 backend 镜像
             docker compose pull backend
             
-            # 停止旧容器
-            echo ""
-            echo "Stopping old container..."
-            docker compose stop backend || true
-            docker compose rm -f backend || true
-            
-            # 启动新容器
-            echo ""
-            echo "Starting new container..."
+            # 重启 backend (不影响数据库)
+            docker compose stop backend
+            docker compose rm -f backend
             docker compose up -d backend
             
-            # 等待应用启动
-            echo ""
-            echo "Waiting for application to start..."
-            sleep 30
+            sleep 25
+            fi
+   
+            # 检查 PostgreSQL
+            echo "  - PostgreSQL..."
+            docker compose exec -T postgres pg_isready -U gamevault_user -d gamevault
+            
+            # 检查 Redis
+            echo "  - Redis..."
+            docker compose exec -T redis redis-cli ping
             
             # 健康检查
             echo ""
@@ -259,6 +281,12 @@ jobs:
             echo ""
             echo "Application is healthy!"
             
+            # 验证数据库表
+            echo ""
+            echo "Verifying database schema..."
+            docker compose exec -T postgres psql -U gamevault_user -d gamevault -c "\dt" | grep developer_profile && echo "✅ developer_profile table exists" || echo "⚠️  Table check failed"
+            
+  
             # 显示容器状态
             echo ""
             echo "Container status:"

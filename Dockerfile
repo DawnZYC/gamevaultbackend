@@ -34,6 +34,9 @@ LABEL version="1.0.0"
 
 # Create non-root user for security
 RUN addgroup -S appgroup && adduser -S appuser -G appgroup
+
+RUN apk add --no-cache wget
+
 WORKDIR /app
 
 # Copy JAR from builder stage
