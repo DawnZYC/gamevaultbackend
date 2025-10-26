@@ -43,9 +43,9 @@ WORKDIR /app
 COPY --from=builder /app/target/*.jar app.jar
 
 # Create directories for file storage and secrets
-RUN mkdir -p /app/uploads/avatars /app/uploads/games /app/secrets/keys && \
+RUN mkdir -p /app/uploads/avatars /app/uploads/games /app/game-assets /app/secrets/keys && \
     chown -R appuser:appgroup /app && \
-    chmod -R 755 /app/uploads
+    chmod -R 755 /app/uploads /app/game-assets
 
 # Copy secrets (RSA keys for JWT)
 COPY --chown=appuser:appgroup secrets/keys /app/secrets/keys

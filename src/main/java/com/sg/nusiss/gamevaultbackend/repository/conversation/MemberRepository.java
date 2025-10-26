@@ -35,12 +35,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     List<Member> findByUserId(Long userId);
 
     /**
-     * 查询某个用户加入的所有群聊成员记录（带JOIN FETCH避免懒加载）
-     */
-    @Query("SELECT m FROM Member m JOIN FETCH m.conversation WHERE m.user.userId = ?1")
-    List<Member> findByUserIdWithConversation(Long userId);
-
-    /**
      * 检查用户是否在某个群聊中
      */
     @Query("SELECT CASE WHEN COUNT(m) > 0 THEN true ELSE false END FROM Member m WHERE m.conversation.id = ?1 AND m.user.userId = ?2")
@@ -56,12 +50,6 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
      * 查询某个群聊的活跃成员
      */
     List<Member> findByConversationIdAndIsActive(Long conversationId, Boolean isActive);
-
-    /**
-     * 查询某个群聊的活跃成员（带JOIN FETCH避免懒加载）
-     */
-    @Query("SELECT m FROM Member m JOIN FETCH m.user WHERE m.conversation.id = ?1 AND m.isActive = ?2")
-    List<Member> findByConversationIdAndIsActiveWithUser(Long conversationId, Boolean isActive);
 
     /** 检查用户是否在某个群聊中（活跃状态） */
     @Query("SELECT CASE WHEN COUNT(m) > 0 THEN true ELSE false END FROM Member m WHERE m.conversation.id = ?1 AND m.user.userId = ?2 AND m.isActive = ?3")

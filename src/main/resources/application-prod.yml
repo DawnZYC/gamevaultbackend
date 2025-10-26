@@ -105,7 +105,7 @@ app:
     max-page-size: 100
 
   asset-base-url: ${ASSET_BASE_URL:http://47.130.173.114:8080}
-  asset-storage-path: ${ASSET_STORAGE_PATH:game-assets}
+  asset-storage-path: ${ASSET_STORAGE_PATH:/app/game-assets}
 
 # MyBatis 配置
 mybatis:
