@@ -172,6 +172,7 @@ public class ConversationService {
     /**
      * get conversation users
      */
+    @Transactional(readOnly = true)
     public List<MemberResponse> getMembers(Long conversationId, Long currentUserId) {
         // 1. 验证群聊是否存在
         Conversation conversation = conversationRepository.findById(conversationId)
@@ -192,7 +193,7 @@ public class ConversationService {
         }
 
         // 4. 查询所有活跃成员
-        List<Member> members = memberRepository.findByConversationIdAndIsActive(
+        List<Member> members = memberRepository.findByConversationIdAndIsActiveWithUser(
                 conversationId, true
         );
 

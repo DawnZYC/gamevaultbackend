@@ -62,4 +62,10 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     /** 查询用户的活跃成员记录 */
     @Query("SELECT m FROM Member m WHERE m.user.userId = ?1 AND m.isActive = ?2")
     List<Member> findByUserIdAndIsActive(Long userId, Boolean isActive);
+
+    /**
+     * 查询某个群聊的活跃成员（带JOIN FETCH避免懒加载）
+     */
+    @Query("SELECT m FROM Member m JOIN FETCH m.user WHERE m.conversation.id = ?1 AND m.isActive = ?2")
+    List<Member> findByConversationIdAndIsActiveWithUser(Long conversationId, Boolean isActive);
 }
