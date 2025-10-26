@@ -77,17 +77,27 @@ echo "=========================================="
 START_TIME=$(date +%s)
 
 # 使用URL列表进行扫描
-# -d: 调试模式
-# -I: 不使用spider（我们已经有完整的URL列表）
 docker run --rm \
     -v $(pwd):/zap/wrk:rw \
     ghcr.io/zaproxy/zaproxy:stable \
     zap-baseline.py \
-    -t "http://47.130.173.114:3000" \
-    -u "http://47.130.173.114:3000/dashboard/store" \
-    -u "http://47.130.173.114:3000/dashboard/forum" \
-    -r zap_baseline_report.html \
+    -t "http://47.130.173.114:3000/dashboard/store" \
+    -m 0 \
+    -r zap_report_store.html \
     -l PASS || true
+
+# 扫描第二个URL
+docker run --rm \
+    -v $(pwd):/zap/wrk:rw \
+    ghcr.io/zaproxy/zaproxy:stable \
+    zap-baseline.py \
+    -t "http://47.130.173.114:3000/dashboard/forum" \
+    -m 0 \
+    -r zap_report_forum.html \
+    -l PASS || true
+
+# 合并结果（可选）
+cat zap_report_store.html zap_report_forum.html > zap_baseline_report.html
 
 END_TIME=$(date +%s)
 DURATION=$((END_TIME - START_TIME))
