@@ -45,7 +45,7 @@ public class ConversationService {
     /**
      * Create a conversation
      */
-    @Transactional(readOnly = true)
+    @Transactional
     public Conversation createConversation(String title, Long ownerId) {
         if (title == null || title.trim().isEmpty()) {
             throw new BusinessException(ErrorCode.PARAMS_ERROR, "群聊标题不能为空");
