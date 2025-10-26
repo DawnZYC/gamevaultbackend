@@ -1,6 +1,6 @@
 # ==========================================
 # Dynamic Application Security Testing (DAST) Workflow
-# Using OWASP ZAP via zap-scan.sh
+# Using OWASP ZAP via zap-scan_full.sh
 # ==========================================
 name: "DAST - OWASP ZAP Scan"
 
