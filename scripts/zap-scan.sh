@@ -77,26 +77,35 @@ echo "=========================================="
 START_TIME=$(date +%s)
 
 # 使用URL列表进行扫描
-docker run --rm \
-    --user $(id -u):$(id -g) \
-    -v $(pwd):/zap/wrk:rw \
+# 运行容器并命名，报告生成在容器内
+docker run --name zap-scan-1 \
+    -v $(pwd):/zap/wrk:ro \
     ghcr.io/zaproxy/zaproxy:stable \
     zap-baseline.py \
     -t "http://47.130.173.114:3000/dashboard/store" \
     -m 0 \
-    -r zap_report_store.html \
+    -r /tmp/report1.html \
     -l PASS || true
 
-# 扫描第二个URL
-docker run --rm \
-    --user $(id -u):$(id -g) \
-    -v $(pwd):/zap/wrk:rw \
+# 从容器复制报告出来
+docker cp zap-scan-1:/tmp/report1.html ./zap_report_store.html
+docker rm zap-scan-1
+
+# 第二个URL
+docker run --name zap-scan-2 \
+    -v $(pwd):/zap/wrk:ro \
     ghcr.io/zaproxy/zaproxy:stable \
     zap-baseline.py \
     -t "http://47.130.173.114:3000/dashboard/forum" \
     -m 0 \
-    -r zap_report_forum.html \
+    -r /tmp/report2.html \
     -l PASS || true
+
+docker cp zap-scan-2:/tmp/report2.html ./zap_report_forum.html
+docker rm zap-scan-2
+
+# 合并
+cat zap_report_store.html zap_report_forum.html > zap_baseline_report.html
 
 # 合并结果（可选）
 cat zap_report_store.html zap_report_forum.html > zap_baseline_report.html
