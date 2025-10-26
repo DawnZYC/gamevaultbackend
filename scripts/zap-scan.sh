@@ -87,9 +87,6 @@ docker run --rm \
     -u "http://47.130.173.114:3000/dashboard/store" \
     -u "http://47.130.173.114:3000/dashboard/forum" \
     -r zap_baseline_report.html \
-    -J zap_baseline_report.json \
-    -T "$((MAX_DURATION * 60))" \
-    -d \
     -l PASS || true
 
 END_TIME=$(date +%s)

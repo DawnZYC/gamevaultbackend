@@ -20,7 +20,7 @@ permissions:
 
 env:
   IMAGE_NAME: gamevault-backend
-  ZAP_TARGET_URL: http://localhost:8080
+  ZAP_TARGET_URL: http://47.130.173.114:3000
 
 jobs:
   dast-scan:
