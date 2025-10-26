@@ -78,6 +78,7 @@ START_TIME=$(date +%s)
 
 # 使用URL列表进行扫描
 docker run --rm \
+    --user $(id -u):$(id -g) \
     -v $(pwd):/zap/wrk:rw \
     ghcr.io/zaproxy/zaproxy:stable \
     zap-baseline.py \
@@ -88,6 +89,7 @@ docker run --rm \
 
 # 扫描第二个URL
 docker run --rm \
+    --user $(id -u):$(id -g) \
     -v $(pwd):/zap/wrk:rw \
     ghcr.io/zaproxy/zaproxy:stable \
     zap-baseline.py \
