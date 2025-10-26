@@ -83,8 +83,9 @@ docker run --rm \
     -v $(pwd):/zap/wrk:rw \
     ghcr.io/zaproxy/zaproxy:stable \
     zap-baseline.py \
-    -t "$TARGET_URL" \
-    -n "$URL_LIST_FILE" \
+    -t "http://47.130.173.114:3000" \
+    -u "http://47.130.173.114:3000/dashboard/store" \
+    -u "http://47.130.173.114:3000/dashboard/forum" \
     -r zap_baseline_report.html \
     -J zap_baseline_report.json \
     -T "$((MAX_DURATION * 60))" \
