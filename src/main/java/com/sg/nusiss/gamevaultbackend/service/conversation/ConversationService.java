@@ -83,6 +83,7 @@ public class ConversationService {
     /**
      * List all conversation for current user
      */
+    @Transactional(readOnly = true)
     public List<ConversationListResponse> getUserConversations(Long userId) {
         // 1. 查询用户加入的所有群聊成员记录
         List<Member> members = memberRepository.findByUserId(userId);
@@ -193,7 +194,8 @@ public class ConversationService {
         }
 
         // 4. 查询所有活跃成员
-        List<Member> members = memberRepository.findByConversationIdAndIsActiveWithUser(
+        // 4. 查询所有活跃成员
+        List<Member> members = memberRepository.findByConversationIdAndIsActive(
                 conversationId, true
         );
 
