@@ -83,9 +83,10 @@ public class ConversationService {
     /**
      * List all conversation for current user
      */
+    @Transactional(readOnly = true)
     public List<ConversationListResponse> getUserConversations(Long userId) {
-        // 1. 查询用户加入的所有群聊成员记录
-        List<Member> members = memberRepository.findByUserId(userId);
+        // 1. 查询用户加入的所有群聊成员记录（使用JOIN FETCH避免懒加载）
+        List<Member> members = memberRepository.findByUserIdWithConversation(userId);
 
         if (members.isEmpty()) {
             return Collections.emptyList();
@@ -172,6 +173,7 @@ public class ConversationService {
     /**
      * get conversation users
      */
+    @Transactional(readOnly = true)
     public List<MemberResponse> getMembers(Long conversationId, Long currentUserId) {
         // 1. 验证群聊是否存在
         Conversation conversation = conversationRepository.findById(conversationId)
@@ -191,8 +193,8 @@ public class ConversationService {
             throw new BusinessException(ErrorCode.NO_AUTH_ERROR, "您不在该群聊中");
         }
 
-        // 4. 查询所有活跃成员
-        List<Member> members = memberRepository.findByConversationIdAndIsActive(
+        // 4. 查询所有活跃成员（使用JOIN FETCH避免懒加载）
+        List<Member> members = memberRepository.findByConversationIdAndIsActiveWithUser(
                 conversationId, true
         );
 
